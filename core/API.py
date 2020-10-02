@@ -14,12 +14,12 @@ class Login(APIView):
         data = request.data 
         USER_CRED = data['USER_CRED'] 
         PASSWORD = data['PASSWORD'] 
-        #query = "select count(ID_CREDENCIAL) from CREDENCIAL where USER_CRED = '%s' and PASSWORD = '%s'"  %(USER_CRED , PASSWORD)
+        query = "select count(ID_CREDENCIAL) from CREDENCIAL where USER_CRED = '%s' and PASSWORD = '%s'"  %(USER_CRED , PASSWORD)
         #query = "call SP_AUTENTICAR_USUARIO('%s', '%s', O_RESULT)"  %(USER_CRED , PASSWORD)
-        query = "SP_AUTENTICAR_USUARIO"
-        data = cursor.callproc(query,[cursor])
-        #lista = []
-        #for x in data:
-         #   lista.append({'respuesta':x[0]})
-        #res = json.dumps(lista)
-        return HttpResponse(data, 'application/javascript')
+        #query = "SP_AUTENTICAR_USUARIO"
+        data = cursor.execute(query)
+        lista = []
+        for x in data:
+            lista.append({'respuesta':x[0]})
+        res = json.dumps(lista)
+        return HttpResponse(res, 'application/javascript')
