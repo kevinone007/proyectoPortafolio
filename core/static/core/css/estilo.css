@@ -1,0 +1,70 @@
+body {
+   margin: 0;
+   padding: 0;
+}
+
+.btn-login{
+    border-radius: 25px;
+}
+.global-Color{
+    background:  #851313;
+}
+.global-ColorBoder{
+    border:   #851313;
+}
+.global-Gris{
+    background: #f5f3f3;
+}
+.Absoluto{
+    position: absolute;
+}
+.f18{
+    font-size: 18px;
+}
+.myhr{
+    width: 30px; 
+    background:#ec0206;
+    height: 2px;
+}
+.mybtn{
+    border-radius: 20px;
+    font-weight: 600;
+}
+.bgwhite{
+    background: white; 
+}
+/*-------------------------------------------*\
+    HOME
+\*-------------------------------------------*/
+
+/*-------------------------------------------*\
+    MENU_ALUMNO
+\*-------------------------------------------*/
+
+.offitem{
+    width: 95%;
+    background:#7e7e7e; 
+    font-weight: 700;
+    border-top-right-radius:15px; 
+    border-bottom-right-radius: 15px;
+}
+.offitem:hover{
+    width: 95%;  background:  #a31111; font-weight: 700; border-top-right-radius: 15px; border-bottom-right-radius: 15px;
+}
+.offitem:active {
+    width: 95%;  background:  #a31111; font-weight: 700; border-top-right-radius: 15px; border-bottom-right-radius: 15px;
+}
+.onitem{
+    width: 95%;  background:  #a31111; font-weight: 700; border-top-right-radius: 15px; border-bottom-right-radius: 15px;
+}
+
+.onitem:hover{
+    width: 95%;  background:  #a31111; font-weight: 700; border-top-right-radius: 15px; border-bottom-right-radius: 15px;
+}
+.pointer {cursor: pointer;}
+.border-top{
+    border-top-left-radius: 10px; border-top-right-radius: 10px ; 
+}
+.border10{
+    border-radius: 10px;
+}
