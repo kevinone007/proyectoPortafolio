@@ -16,11 +16,15 @@ def login(request):
         url = 'http://127.0.0.1:8000/API/Login/'
         res = requests.post(url, data)
         respu = json.loads(res.text)
+        res2 = requests.get(url, data)
+        respu2 = json.loads(res2.text)
         if respu[0]['respuesta'] == 0:
             data = {'msj': "Credenciales Erroneas"}
+            return render(request,'core/login.html', data)   
+        if respu2[0]['ID_EST_CREDEN'] == 1:
+            data = {'msj': "Cuenta Bloqueada"}
             return render(request,'core/login.html', data)
         else:
-            #request.session['sessionLogin'] = USER_CRED
             return redirect(home)
     return render(request,'core/login.html',  {'nbar': 'login'})
     
