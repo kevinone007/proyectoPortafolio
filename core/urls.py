@@ -1,6 +1,6 @@
 from django.urls import path , include
 from django.contrib import admin
-from .views import home, login, registro, inicioCliente
+from .views import home, login, registro, inicioCliente, solicitarVisita
 from .API import Login
 
 #from core.view.registro import registro
@@ -11,5 +11,7 @@ urlpatterns = [
     path('registro', registro, name='registro'),
     path('login', login, name='login'),
     path('API/Login/', Login.as_view()),
-    path('inicioCliente', inicioCliente, name='inicioCliente')
+    path('inicioCliente', inicioCliente, name='inicioCliente'),
+    path('solicitarVisita', solicitarVisita, name='solicitarVisita')
+
 ]

@@ -20,16 +20,14 @@ class Login(APIView):
         data = request.data 
         USER_CRED = data['USER_CRED'] 
         PASSWORD = data['PASSWORD'] 
-        cursor.callproc("SP_LOGIN_0",[USER_CRED,PASSWORD,out_cur])
+        cursor.callproc("SP_LOGIN",[USER_CRED,PASSWORD,out_cur])
         lista = []
         
         for x in out_cur:
-            lista.append({'RES':x[1],'TIPO':x[2]})
-
+            lista.append({'RES':x[0], 'id_credencial':x[1], 'user_cred':x[2], 'password':x[3] ,'id_rol':x[4], 'id_est_creden':x[5], 'id_profesional':x[6], 'id_cliente':x[7]})
         if(len(lista) == 0):
             res = json.dumps([{'RES':0}])
         else:
             res = json.dumps(lista)
 
         return HttpResponse(res, 'application/javascript')
-

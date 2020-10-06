@@ -6,6 +6,9 @@ from django.core.cache import cache
 
 # Create your views here.
 
+data = {}
+
+
 def home(request):
     return render(request,'core/home.html', {'nbar': 'home'})
 
@@ -24,24 +27,30 @@ def login(request):
         res = requests.post(url, dataSet)
 
         dataGet = json.loads(res.text)
-        
+        nombreUsuario = dataGet[0]['user_cred']
+        print(nombreUsuario)
+
         if dataGet[0]['RES'] == 0:
             data = {'msj': "Credenciales Erroneas"}
             return render(request,'core/login.html', data)
         else:
+            if(dataGet[0]['id_est_creden'] == 2):
+                data = {'msj': "Cuenta Bloqueada, contacte al administrador"}
+                return render(request,'core/login.html', data)
+            else:
+                request.session["S"] = USER_CRED
+                
+                if(dataGet[0]['id_rol'] == 1):             
+                    data = {'msj': "Usted es administrador, debe iniciar sesion en el sistema de escritorio."}
+                    return render(request,'core/login.html', data)
+                
+                if(dataGet[0]['id_rol'] == 2):
+                    data = {'msj': "Usuario: " + nombreUsuario }
+                    return render(request,'core/vistaCliente/inicioCliente.html', data)
+                
+                if(dataGet[0]['id_rol'] == 3):
+                    print('WENA TIPO 3')    
 
-            request.session["S"] = USER_CRED
-            
-            if(dataGet[0]['TIPO'] == 1):             
-                print('WENA TIPO 1')
-            
-            if(dataGet[0]['TIPO'] == 2):
-                return redirect(inicioCliente)
-            
-            if(dataGet[0]['TIPO'] == 3):
-                print('WENA TIPO 3')
-           
-        
     return render(request,'core/login.html',  {'nbar': 'login'})
     
 
@@ -52,10 +61,12 @@ def registro(request):
 def inicioCliente(request):
     #user = request.session['S']
     if 'S' in request.session:
-        print('x')
+        print('Usuario loggeado')
     else:
         return redirect(login)
-    if request.method == 'POST' and 'cerrar_session' :
-        
+    if request.method == 'POST' and 'cerrar_session' : 
         del request.session['S']
-    return render(request,'core/vistaCliente/inicioCliente.html', {'nbar': 'inicioCliente'})
+    return render(request,'core/vistaCliente/inicioCliente.html', {'nbarCliente': 'inicioCliente'})
+
+def solicitarVisita(request):
+    return render(request, 'core/vistaCliente/solicitarVisita.html', {'nbarCliente': 'solicitarVisita'})
