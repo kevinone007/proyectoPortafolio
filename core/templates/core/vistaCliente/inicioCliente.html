@@ -17,7 +17,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'solicitarVisita' %}active{% endif %}" href="#">Solicitar Visita</a>
+            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'solicitarVisita' %}active{% endif %}" href="{% url 'solicitarVisita' %}">Solicitar Visita</a>
             <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Solicitar Capacitacion</a>
             <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Solicitar Asesoria</a>
             <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Modificar CheckList</a>
@@ -25,18 +25,12 @@
             <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Modificar Mis Datos</a>
 
             <div class="navbar-nav ml-auto ">
-
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <button class="nav-link float-right btn btn-danger ml-2 {% if nbar == 'home' %}active{% endif %}" name="cerrar_session" href="#">Cerrar Sesion</button>
-                </form>
-
-
+                <a class="nav-link float-right btn btn-danger ml-2 {% if nbar == 'home' %}active{% endif %}" type="submit" href="{% url 'mataSesion' %}" name="cerrar_session">Cerrar Sesion</a>
             </div>
         </div>
     </nav>
     <div class="container shadow bg-white mt-5 p-3">
-        <h1 class="text text-center">{{msj}}</h1>
+        <h1 class="text text-center">{{data.user_cred}}</h1>
 
         {% block contenidoCliente %} {% endblock contenidoCliente %}
     </div>

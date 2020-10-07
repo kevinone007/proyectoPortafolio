@@ -29,5 +29,5 @@ class Login(APIView):
             res = json.dumps([{'RES':0}])
         else:
             res = json.dumps(lista)
-
+        print(res)
         return HttpResponse(res, 'application/javascript')

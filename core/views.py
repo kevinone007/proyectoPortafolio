@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.shortcuts import render , redirect
 import requests
 import json
+from django.db import connection
 from django.core.cache import cache
 
 # Create your views here.
 
-data = {}
+django_cursor = connection.cursor()
+cursor = django_cursor.connection.cursor()
 
 
 def home(request):
@@ -45,9 +47,8 @@ def login(request):
                     return render(request,'core/login.html', data)
                 
                 if(dataGet[0]['id_rol'] == 2):
-                    data = {'msj': "Usuario: " + nombreUsuario }
-                    return render(request,'core/vistaCliente/inicioCliente.html', data)
-                
+                    return redirect(inicioCliente)
+
                 if(dataGet[0]['id_rol'] == 3):
                     print('WENA TIPO 3')    
 
@@ -58,15 +59,34 @@ def registro(request):
 
     return render(request,'core/registro.html',  {'nbar': 'registro'})
 
+def retornaDataUsuarioCliente(USER):
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SPD_GETDATAUSUARIO",[USER, out_cur])
+    lista = []
+    for x in out_cur:
+            lista.append({'id_credencial':x[0], 'user_cred':x[1], 'password':x[2] ,'id_rol':x[3], 'id_est_creden':x[4], 'id_profesional':x[5], 'id_cliente':x[6]})
+    return lista
+
+def mataSesion(request):
+    if 'S' in request.session:
+        del request.session['S']
+        return redirect(login)
+
+
 def inicioCliente(request):
-    #user = request.session['S']
     if 'S' in request.session:
         print('Usuario loggeado')
     else:
         return redirect(login)
-    if request.method == 'POST' and 'cerrar_session' : 
-        del request.session['S']
-    return render(request,'core/vistaCliente/inicioCliente.html', {'nbarCliente': 'inicioCliente'})
+    lista = retornaDataUsuarioCliente(request.session['S'])
+    data = {'data': lista[0] }
+    return render(request,'core/vistaCliente/inicioCliente.html', data)
+
+
+
+    
 
 def solicitarVisita(request):
-    return render(request, 'core/vistaCliente/solicitarVisita.html', {'nbarCliente': 'solicitarVisita'})
+    lista = retornaDataUsuarioCliente(request.session['S'])
+    data = {'data': lista[0] }
+    return render(request, 'core/vistaCliente/solicitarVisita.html', data)
