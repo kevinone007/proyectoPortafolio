@@ -1,5 +1,96 @@
-{% extends "core/vistaCliente/inicioCliente.html" %} {% load static %} {% block contenidoCliente %}
+{% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
 
 <h1 class="text text-center"> Solicitar Visita a Terreno</h1>
-<h1>{{ data.user_cred }}</h1>
+<br>
+<h3 class="text text-center">Datos Cliente</h3>
+<br>
+<div class="row">
+    <div class="col border border-black">
+        <form class="ml-3 mr-3 mb-3 mt-3">
+            <h3>Datos empresa</h3>
+            <div class="row p-2">
+                <div class="form-group col-8">
+                    <label>Nombre Empresa</label>
+                    <input type="text" class="form-control" name="nombreEmpresa" placeholder="Nombre" required>
+                </div>
+                <div class="form-group col-3">
+                    <label>RUT Empresa</label>
+                    <input type="text" class="form-control" name="rutEmpresa" placeholder="RUT" required>
+                </div>
+                <div class="form-group col-1">
+                    <label>DV</label>
+                    <input type="text" class="form-control" name="dvEmpresa" placeholder="DV" required>
+                </div>
+            </div>
+            <br>
+            <h3>Datos Representante Legal</h3>
+            <div class="row p-2">
+                <div class="form-group col-md-3">
+                    <label>Nombre</label>
+                    <input type="text" class="form-control" name="nombreRepresentante" placeholder="Nombre" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Apellido Paterno </label>
+                    <input type="text" class="form-control" name="APRepresentante" placeholder="Apellido Paterno" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Apellido Materno </label>
+                    <input type="text" class="form-control" name="AMRepresentante" placeholder="Apellido Materno" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>RUT </label>
+                    <input type="text" class="form-control" name="rutRepresentante" placeholder="RUT" required>
+                </div>
+                <div class="form-group col-md-1">
+                    <label>DV</label>
+                    <input type="text" class="form-control" name="dvRepresentante" placeholder="DV" required>
+                </div>
+                <div class="form-group col-md-8">
+                    <label>Direccion</label>
+                    <input type="text" class="form-control" name="direccionRepresentante" placeholder="Direccion" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Numero</label>
+                    <input type="text" class="form-control" name="numeroDireccionRepresentante" placeholder="Numero" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Oficina</label>
+                    <input type="text" class="form-control" name="oficinaDireccionRepresentante" placeholder="Oficina">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Region</label>
+                    <select class="form-control" id="regiones" name="regiones"></select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Comuna</label>
+                    <select class="form-control" id="comunas" name="comunas"></select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Celular</label>
+                    <input type="text" class="form-control" name="celularDireccionRepresentante" placeholder="Celular">
+                </div>
+                <div class="form-group col-md-7">
+                    <label>Correo Electronico</label>
+                    <input type="text" class="form-control" name="correoRepresentante" placeholder="Correo Electronico">
+                </div>
+                <div class="form-group col-md-5">
+                    <label>Rubro Empresa</label>
+                    <input type="text" class="form-control" name="rubroEmpresaRepresentante" placeholder="Rubro Empresa">
+                </div>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-primary btn-block" type="submit">
+                    Realizar Solicitud
+                </button>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <a class="btn btn-primary btn-block" href="{% url 'inicioCliente' %}">
+                          Volver a home
+                        </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 {% endblock contenidoCliente %}

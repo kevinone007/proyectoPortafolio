@@ -29,8 +29,7 @@ def login(request):
         res = requests.post(url, dataSet)
 
         dataGet = json.loads(res.text)
-        nombreUsuario = dataGet[0]['user_cred']
-        print(nombreUsuario)
+
 
         if dataGet[0]['RES'] == 0:
             data = {'msj': "Credenciales Erroneas"}
@@ -71,6 +70,8 @@ def mataSesion(request):
     if 'S' in request.session:
         del request.session['S']
         return redirect(login)
+
+
 
 
 def inicioCliente(request):

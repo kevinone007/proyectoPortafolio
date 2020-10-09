@@ -14,7 +14,7 @@
                 </div>
                 <div class="form-group col-3">
                     <label>RUT Empresa</label>
-                    <input type="text" class="form-control" name="rutEmpresa" placeholder="RUT" required>
+                    <input type="text" class="form-control" name="rutEmpresa" id="rutEmpresa" placeholder="RUT" required>
                 </div>
                 <div class="form-group col-1">
                     <label>DV</label>
@@ -58,11 +58,15 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label>Region</label>
-                    <select class="form-control" id="regiones" name="regiones"></select>
+                    <select class="form-control" id="regiones" name="regiones">
+                        <option value="0" selected hidden>Seleccione Region</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label>Comuna</label>
-                    <select class="form-control" id="comunas" name="comunas"></select>
+                    <select class="form-control" id="comunas" name="comunas">
+                        <option value="0" selected>Seleccione Comuna</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label>Celular</label>
@@ -74,8 +78,9 @@
                 </div>
                 <div class="form-group col-md-5">
                     <label>Rubro Empresa</label>
-                    <input type="text" class="form-control" name="rubroEmpresaRepresentante" placeholder="Rubro Empresa">
-                </div>
+                    <select class="form-control" id="rubros" name="rubros">
+                        <option value="0" selected>Seleccione Rubro</option>
+                    </select> </div>
             </div>
             <div class="d-flex justify-content-center mt-3">
                 <button class="btn btn-primary btn-block" type="submit">
@@ -90,5 +95,7 @@
         </form>
     </div>
 </div>
+
+
 
 {% endblock contenido %}
