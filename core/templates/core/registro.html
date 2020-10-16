@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col border border-black">
-        <form class="ml-3 mr-3 mb-3 mt-3">
+        <form id="registro" method="POST" class="ml-3 mr-3 mb-3 mt-3">
             <h3>Datos empresa</h3>
             <div class="row p-2">
                 <div class="form-group col-8">
@@ -13,8 +13,8 @@
                     <input type="text" class="form-control" name="nombreEmpresa" placeholder="Nombre" required>
                 </div>
                 <div class="form-group col-3">
-                    <label>RUT Empresa</label>
-                    <input type="text" class="form-control" name="rutEmpresa" id="rutEmpresa" placeholder="RUT" required>
+                    <label for="inputRegistro">RUT Empresa</label>
+                    <input type="text" class="form-control" name="rutEmpresa" id="rut" placeholder="RUT" required>
                 </div>
                 <div class="form-group col-1">
                     <label>DV</label>
@@ -95,7 +95,6 @@
         </form>
     </div>
 </div>
-
 
 
 {% endblock contenido %}

@@ -1,25 +1,28 @@
 {% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
 <h1 class="text text-center">Actividades</h1>
 
+{% if actividad|length == 0 %}
+<h1 class="alert alert-danger">Usted no ha registrado actividades</h1>
+{% else %}
 <table class="table">
     <thead class="thead-dark">
         <tr>
             <th scope="col">Actividad</th>
             <th scope="col">Fecha</th>
             <th scope="col">Profesional</th>
-            <th scope="col">Observacion</th>
+            <th scope="col">Estado</th>
         </tr>
     </thead>
+    <h1>{{actividad.NOMBRE}}</h1>
     <tbody>
+        {% for x in actividad %}
         <tr>
-            <td>Alguna actividad</td>
-            <td>22-09-2020</td>
-            <td>Juanito Perez</td>
-            <td>Si lo hizo xd</td>
+            <td>{{x.NOMBRE}}</td>
+            <td>{{x.FECHA}}</td>
+            <td>{{x.PROFESIONAL}}</td>
+            <td>{{x.DESCRIPCION}}</td>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
-
-
-
-{% endblock contenidoCliente %}
+{% endif %} {% endblock contenidoCliente %}

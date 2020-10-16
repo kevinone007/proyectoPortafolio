@@ -22,7 +22,7 @@
             <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Solicitar Asesoria</a>
             <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Modificar CheckList</a>
             <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Modificar Datos</a>
-            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Modificar Mis Datos</a>
+            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Mis Solicitudes</a>
 
             <div class="navbar-nav ml-auto ">
                 <a class="nav-link float-right btn btn-danger ml-2 {% if nbar == 'home' %}active{% endif %}" type="submit" href="{% url 'mataSesion' %}" name="cerrar_session">Cerrar Sesion</a>
@@ -39,6 +39,7 @@
     <script src="{% static 'core/js/popper.min.js'%}"></script>
     <script src="{% static 'core/js/bootstrap.min.js'%}"></script>
     <script src="{% static 'core/js/regionesycomunas.js'%}"></script>
+
 </body>
 
 </html>

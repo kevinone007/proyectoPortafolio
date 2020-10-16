@@ -6,11 +6,6 @@ from django.db import connection
 import json
 from jsonify import convert
 
-
-
-#django_cursor = connection.cursor()
-#cursor = django_cursor.connection.cursor()
-
 class Login(APIView):
 
     def post(self ,request):

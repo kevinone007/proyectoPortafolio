@@ -80,7 +80,13 @@ def inicioCliente(request):
     else:
         return redirect(login)
     lista = retornaDataUsuarioCliente(request.session['S'])
-    data = {'data': lista[0] }
+    IDCLIENTE = lista[0]['id_cliente']
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SPD_ACTIVIDADES",[IDCLIENTE, out_cur])
+    actividades = []
+    for x in out_cur:
+            actividades.append({'NOMBRE':x[0], 'FECHA':x[1], 'PROFESIONAL':x[2] ,'DESCRIPCION':x[3]})
+    data = {'data': lista[0], 'actividad': actividades } #cuando viene con [0] es un array y cuando viene solo es un objeto, el cual es iterable por el FOR 
     return render(request,'core/vistaCliente/inicioCliente.html', data)
 
 
