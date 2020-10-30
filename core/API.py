@@ -51,6 +51,17 @@ class Comunas(APIView):
         res = json.dumps(lista)
         return HttpResponse(res, 'application/javascript')
 
+class Servicios(APIView):
+    def get(self, request):
+        django_cursor = connection.cursor()
+        cursor = django_cursor.connection.cursor()
+        data = cursor.execute('select ID_SERVICIO, NOMBRE from SERVICIO')
+        lista = []
+        for x in data:
+            lista.append({'ID_SERVICIO':x[0], 'NOMBRE':x[1]})
+        res = json.dumps(lista)
+        return HttpResponse(res, 'application/javascript')
+
 class Rubros(APIView):
     def get(self, request):
         django_cursor = connection.cursor()

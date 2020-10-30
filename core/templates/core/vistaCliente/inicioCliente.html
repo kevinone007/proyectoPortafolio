@@ -1,6 +1,6 @@
 {% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
 <h1 class="text text-center">Actividades</h1>
-
+<h1>{{actividad.NOMBRE}}</h1>
 {% if actividad|length == 0 %}
 <h1 class="alert alert-danger">Usted no ha registrado actividades</h1>
 {% else %}
@@ -13,7 +13,6 @@
             <th scope="col">Estado</th>
         </tr>
     </thead>
-    <h1>{{actividad.NOMBRE}}</h1>
     <tbody>
         {% for x in actividad %}
         <tr>

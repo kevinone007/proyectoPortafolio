@@ -12,26 +12,118 @@
 
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark container-fluid">
-        <a class="navbar-brand  {% if nbarCliente == 'inicioCliente' %}active{% endif %}" href="{% url 'inicioCliente' %}">Bienvenido {{data.user_cred}}</a>
+        <a class="navbar-brand" href="{% url 'inicioCliente' %}">Bienvenido {{data.user_cred}}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'solicitarVisita' %}active{% endif %}" href="{% url 'solicitarVisita' %}">Solicitar Visita</a>
-            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Solicitar Capacitacion</a>
-            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Solicitar Asesoria</a>
-            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Modificar CheckList</a>
-            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Modificar Datos</a>
-            <a class="nav-link btn btn-secondary ml-2 {% if nbarCliente == 'home' %}active{% endif %}" href="#">Mis Solicitudes</a>
+            <a class="nav-link btn btn-secondary ml-2" data-toggle="modal" data-target="#solicitarVisita">Solicitar Visita</a>
+            <a class="nav-link btn btn-secondary ml-2" data-toggle="modal" data-target="#solicitarCapacitacion">Solicitar Capacitacion</a>
+            <a class="nav-link btn btn-secondary ml-2" data-toggle="modal" data-target="#solicitarAsesoria">Solicitar Asesoria</a>
+            <a class="nav-link btn btn-secondary ml-2" data-toggle="modal" data-target="#modificarChecklist">Modificar CheckList</a>
+            <a class="nav-link btn btn-secondary ml-2" href="{% url 'modificarDatos' %}">Modificar Datos</a>
 
             <div class="navbar-nav ml-auto ">
-                <a class="nav-link float-right btn btn-danger ml-2 {% if nbar == 'home' %}active{% endif %}" type="submit" href="{% url 'mataSesion' %}" name="cerrar_session">Cerrar Sesion</a>
+                <a class="nav-link float-right btn btn-danger ml-2" type="submit" href="{% url 'mataSesion' %}" name="cerrar_session">Cerrar Sesion</a>
             </div>
         </div>
     </nav>
     <div class="container shadow bg-white mt-5 p-3">
 
+        <!-- Modal Solicitar Visita -->
+        <div class="modal fade" id="solicitarVisita" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Solicitar Visita en Terreno</h5>
+                    </div>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <label>Fecha de Visita</label>
+                            <input type="date" name="fechaVisita" id="fechaVisita">
+                            <label>Hora de Visita</label>
+                            <input type="time" name="horaVisita" id="horaVisita">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button class="btn btn-primary" id="btnRealizarSolicitud" name="btnRealizarSolicitud" type="submit">Realizar Solicitud</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
+
+        <!-- Modal Solicitar Capacitacion -->
+        <div class="modal fade" id="solicitarCapacitacion" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Solicitar Capacitacion</h5>
+                    </div>
+                    <div class="modal-body">
+                        <label>Numero de Asistentes</label>
+                        <input type="number" name="numeroAsistentes" id="numeroAsistentes">
+                        <label>Fecha de Capacitacion</label>
+                        <input type="date" name="fechaCapacitacion" id="fechaCapacitacion">
+                        <label>Hora de Capacitacion</label>
+                        <input type="time" name="horaCapacitacion" id="horaCapacitacion">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button class="btn btn-primary">Realizar Solicitud</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Solicitar Asesoria -->
+        <div class="modal fade" id="solicitarAsesoria" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Solicitar Asesoria</h5>
+                    </div>
+                    <div class="modal-body">
+                        <label>Motivo Asesoria</label>
+                        <select class="form-control" id="servicios" name="servicios">
+                        <option value="0" selected>Seleccione Servicio</option>
+                    </select>
+
+                        <label>Fecha de Asesoria</label>
+                        <input type="date" name="fechaAsesoria" id="fechaAsesoria">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button class="btn btn-primary">Realizar Solicitud</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Modificar Checklist -->
+        <div class="modal fade" id="modificarChecklist" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Modificacion de Checklist</h5>
+                    </div>
+                    <div class="modal-body">
+                        <label>Fecha de Modificacion</label>
+                        <input type="date" name="fechaModificacion" id="fechaModificacion">
+                        <label>Hora de Modificacion</label>
+                        <input type="time" name="horaModificacion" id="horaModificacion">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button class="btn btn-primary">Realizar Modificacion</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         {% block contenidoCliente %} {% endblock contenidoCliente %}
     </div>
@@ -39,6 +131,7 @@
     <script src="{% static 'core/js/popper.min.js'%}"></script>
     <script src="{% static 'core/js/bootstrap.min.js'%}"></script>
     <script src="{% static 'core/js/regionesycomunas.js'%}"></script>
+
 
 </body>
 

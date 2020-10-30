@@ -30,7 +30,6 @@ def login(request):
 
         dataGet = json.loads(res.text)
 
-
         if dataGet[0]['RES'] == 0:
             data = {'msj': "Credenciales Erroneas"}
             return render(request,'core/login.html', data)
@@ -52,7 +51,6 @@ def login(request):
                     print('WENA TIPO 3')    
 
     return render(request,'core/login.html',  {'nbar': 'login'})
-    
 
 def registro(request):
 
@@ -66,13 +64,18 @@ def retornaDataUsuarioCliente(USER):
             lista.append({'id_credencial':x[0], 'user_cred':x[1], 'password':x[2] ,'id_rol':x[3], 'id_est_creden':x[4], 'id_profesional':x[5], 'id_cliente':x[6]})
     return lista
 
+def dataClienteEmpresa(IDCLIENTE):
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SPD_GETUSUARIOEMPRESA",[IDCLIENTE, out_cur])
+    datacliente = []
+    for x in out_cur:
+            datacliente.append({'ID_CLIENTE':x[0], 'RUT_EMPRESA':x[1], 'NOMBRE_EMPRESA':x[2] ,'TELEFONO':x[3], 'MAIL_EMPRESA':x[4], 'DIRECCION':x[5], 'ID_COMUNA':x[6], 'ID_EST_CLIENT':x[7]})
+    return datacliente
+
 def mataSesion(request):
     if 'S' in request.session:
         del request.session['S']
         return redirect(login)
-
-
-
 
 def inicioCliente(request):
     if 'S' in request.session:
@@ -87,13 +90,30 @@ def inicioCliente(request):
     for x in out_cur:
             actividades.append({'NOMBRE':x[0], 'FECHA':x[1], 'PROFESIONAL':x[2] ,'DESCRIPCION':x[3]})
     data = {'data': lista[0], 'actividad': actividades } #cuando viene con [0] es un array y cuando viene solo es un objeto, el cual es iterable por el FOR 
+   
+   ###############################################
+    if request.method == 'POST' and 'btnRealizarSolicitud' in request.POST:
+        fechaVisita  =   request.POST.get('fechaVisita')
+        horaVisita   =   request.POST.get('horaVisita')
+        horaVisita = horaVisita[:1]
+        minutoVisita = horaVisita[:4]
+        print(horaVisita, minutoVisita)
+        cursor.callproc("SPD_INGRESARSOLICITUD",(fechaVisita, horaVisita, minutoVisita, IDCLIENTE))
+
     return render(request,'core/vistaCliente/inicioCliente.html', data)
 
-
-
-    
-
-def solicitarVisita(request):
+def modificarDatos(request):
     lista = retornaDataUsuarioCliente(request.session['S'])
-    data = {'data': lista[0] }
-    return render(request, 'core/vistaCliente/solicitarVisita.html', data)
+    data = lista[0]['id_cliente'] 
+    print(data)
+    ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
+
+    if request.method == 'POST' :
+        nombreEmpresa = request.POST.get('nombreEmpresa')
+        rutEmpresa    = request.POST.get('rutEmpresa')
+        direccion     = request.POST.get('direccion')
+        telefono      = request.POST.get('telefono')
+        comunas       = request.POST.get('comunas')
+        correo        = request.POST.get('correo')
+        cursor.callproc("SPD_MODIFICARCLIENTE",(data, nombreEmpresa, rutEmpresa, direccion, telefono, comunas,correo))
+    return render(request, 'core/vistaCliente/modificarDatos.html', ClienteEmpresa)

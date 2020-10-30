@@ -12,9 +12,8 @@ $(document).ready(function() {
         }
 
     });
-
     GetRubros();
-
+    GetServicios();
 });
 
 const GetRegiones = () => {
@@ -33,7 +32,7 @@ const GetRegiones = () => {
         }
     });
 
-}
+};
 
 const GetComunas = (ID_REGION) => {
     $('#comunas option').remove();
@@ -51,7 +50,7 @@ const GetComunas = (ID_REGION) => {
         }
     });
 
-}
+};
 
 const GetRubros = () => {
     $.ajax({
@@ -67,4 +66,21 @@ const GetRubros = () => {
             alert('error');
         }
     });
-}
+};
+
+
+const GetServicios = () => {
+    $.ajax({
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        type: "GET",
+        url: 'http://127.0.0.1:8000/API/Servicios',
+        success: function(res) {
+            $.each(JSON.parse(res), function(i, x) {
+                $('#servicios').append(`<option value="${x.ID_SERVICIO}">${x.NOMBRE}</option>`);
+            });
+        },
+        error: function(err) {
+            alert('error');
+        }
+    });
+};

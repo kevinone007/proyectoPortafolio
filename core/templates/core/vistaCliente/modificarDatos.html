@@ -1,0 +1,59 @@
+{% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
+<h1>{{msj}}</h1>
+<h1 class="text text-center">Modificar Datos</h1>
+<br>
+<br>
+<div class="row">
+    <div class="col container border border-black">
+        <form method="POST" class="ml-3 mr-3 mb-3 mt-3">
+            {% csrf_token %}
+            <h3>Datos empresa</h3>
+            <div class="row p-2 container">
+                {% for x in ClienteEmpresa %}
+                <div class="form-group col-8">
+                    <label>Nombre Empresa</label>
+                    <input type="text" class="form-control" name="nombreEmpresa" id="nombreEmpresa" placeholder="Nombre Empresa" value="{{x.NOMBRE_EMPRESA}}">
+                </div>
+                <div class="form-group col-4">
+                    <label for="inputRegistro">RUT Empresa</label>
+                    <input type="text" class="form-control" name="rutEmpresa" id="rutEmpresa" placeholder="RUT Empresa" value="{{x.RUT_EMPRESA}}">
+                </div>
+
+                <div class="form-group col-md-8">
+                    <label>Direccion</label>
+                    <input type="text" class="form-control" name="direccion" id="direccion" placeholder="Direccion Empresa" value="{{x.DIRECCION}}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Celular</label>
+                    <input type="text" class="form-control" name="telefono" id="telefono" placeholder="Celular Empresa" value="{{x.TELEFONO}}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Region</label>
+                    <select class="form-control" id="regiones" name="regiones" required>
+                        <option value="" selected hidden>Seleccione Region</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Comuna</label>
+                    <select class="form-control" id="comunas" name="comunas" required>
+                        <option value="" selected>Seleccione Comuna</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>Correo Electronico</label>
+                    <input type="text" class="form-control" name="correo" id="correo" placeholder="Correo Electronico" value="{{x.MAIL_EMPRESA}}">
+                </div>
+
+            </div>
+            {% endfor %}
+            <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-primary btn-block" type="submit">
+                    Realizar Modificacion
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock contenidoCliente %}
