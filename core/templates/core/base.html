@@ -10,19 +10,35 @@
     <link rel="shortcut icon" href="{% static 'core/images/favicon.ico' %}" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&family=Roboto+Condensed:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        .bodyColor {
+            color: #000 !important;
+            background-color: #EDF4ED !important
+        }
+        
+        .navColor {
+            color: #FFF !important;
+            background-color: #79B791 !important
+        }
+        
+        .btnColor {
+            color: #000 !important;
+            background-color: #ABD1B5 !important
+        }
+    </style>
 </head>
 
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body class="bodyColor">
+    <nav class="navbar navbar-expand-lg navbar-dark navColor bg-primary">
         <a class="navbar-brand" href="{% url 'home' %}">No+Accidentes</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler btnColor" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link {% if nbar == 'home' %}active{% endif %}" href="{% url 'home' %}">Inicio</a>
-                <a class="nav-link {% if nbar == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
-                <a class="nav-link {% if nbar == 'registro' %}active{% endif %}" href="{% url 'registro' %}">Solicitud de Servicio</a>
+                <a class="nav-link btn ml-2 btnColor {% if nbar == 'home' %}active{% endif %}" href="{% url 'home' %}">Inicio</a>
+                <a class="nav-link btn ml-2 btnColor {% if nbar == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+                <a class="nav-link btn ml-2 btnColor {% if nbar == 'registro' %}active{% endif %}" href="{% url 'registro' %}">Solicitud de Servicio</a>
             </div>
         </div>
     </nav>

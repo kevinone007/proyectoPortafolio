@@ -14,8 +14,9 @@ $(document).ready(function() {
     });
     GetRubros();
     GetServicios();
+    GetAsistentes();
+    $('.asistentes').select2();
 });
-
 const GetRegiones = () => {
 
     $.ajax({
@@ -78,9 +79,78 @@ const GetServicios = () => {
             $.each(JSON.parse(res), function(i, x) {
                 $('#servicios').append(`<option value="${x.ID_SERVICIO}">${x.NOMBRE}</option>`);
             });
+
         },
         error: function(err) {
             alert('error');
         }
     });
+};
+
+const GetAsistentes = () => {
+    $.ajax({
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        type: "GET",
+        url: 'http://127.0.0.1:8000/API/Asistentes',
+        success: function(res) {
+            $.each(JSON.parse(res), function(i, x) {
+                $('#asistentes').append(`<option value="${x.ID_ASISTENTE}">${x.RUT_TRABAJADOR} , ${x.NOMBRE} ${x.AP_PAT} ${x.AP_MAT}</option>`);
+            });
+        },
+
+        error: function(err) {
+            alert('error');
+        }
+    });
+};
+
+
+
+function validador() {
+    var c = 0;
+    var cod = document.getElementById("asistentes").value;
+    $('#listAsistentes tr').each(function(i) {
+        var $tds = $(this).find('td').eq(0).html();
+
+        if ($tds == cod) {
+            c++;
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ya agregado',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    });
+    if (c == 0) {
+        agregar();
+    }
+
+}
+
+const agregar = () => {
+    var cod = document.getElementById("asistentes").value;
+    var combo = document.getElementById("asistentes");
+    var selected = combo.options[combo.selectedIndex].text;
+    var lista = [];
+    var objeto = {
+        cod: cod,
+        nombre: selected
+    };
+    lista.push(objeto);
+    var fila = '';
+    $.each((lista), function(i, x) {
+        fila += `<tr id="i${x.cod}">
+                    <td style="display:none" >${x.cod}</td>
+                    <td>${x.nombre}</td>
+                    <td><button onclick="eliminarFila('${x.cod}')" class="btn btnColor">Eliminar</button></td>
+                </tr>`
+    });
+    $('#listAsistentes').append(fila);
+};
+
+
+const eliminarFila = (x) => {
+    $(`#i${x}`).remove();
 };

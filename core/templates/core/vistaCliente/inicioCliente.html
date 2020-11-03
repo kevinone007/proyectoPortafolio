@@ -1,11 +1,11 @@
 {% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
-<h1 class="text text-center">Actividades</h1>
+<h1 class="text text-center text-dark">Actividades</h1>
 <h1>{{actividad.NOMBRE}}</h1>
 {% if actividad|length == 0 %}
 <h1 class="alert alert-danger">Usted no ha registrado actividades</h1>
 {% else %}
 <table class="table">
-    <thead class="thead-dark">
+    <thead class="thead">
         <tr>
             <th scope="col">Actividad</th>
             <th scope="col">Fecha</th>

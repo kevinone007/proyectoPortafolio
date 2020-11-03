@@ -55,7 +55,7 @@ class Servicios(APIView):
     def get(self, request):
         django_cursor = connection.cursor()
         cursor = django_cursor.connection.cursor()
-        data = cursor.execute('select ID_SERVICIO, NOMBRE from SERVICIO')
+        data = cursor.execute('select ID_SERVICIO, NOMBRE from SERVICIO where ID_SERVICIO = 1 OR ID_SERVICIO = 4')
         lista = []
         for x in data:
             lista.append({'ID_SERVICIO':x[0], 'NOMBRE':x[1]})
@@ -70,5 +70,17 @@ class Rubros(APIView):
         lista = []
         for x in data:
             lista.append({'COD_RUBRO':x[0], 'DESCRIPCION':x[1]})
+        res = json.dumps(lista)
+        return HttpResponse(res, 'application/javascript')
+
+        
+class Asistentes(APIView):
+    def get(self, request):
+        django_cursor = connection.cursor()
+        cursor = django_cursor.connection.cursor()
+        data = cursor.execute('select ID_ASISTENTE, RUT_TRABAJADOR, NOMBRE, AP_PAT, AP_MAT, NUM_ACCIDENTE, NUM_ACC_POST_CAP, FEC_CAPACITACION, ID_CLIENTE, ID_GENERO, ID_COMUNA from ASISTENTE FETCH FIRST 20 ROWS ONLY')
+        lista = []
+        for x in data:
+            lista.append({'ID_ASISTENTE':x[0], 'RUT_TRABAJADOR':x[1], 'NOMBRE':x[2], 'AP_PAT':x[3], 'AP_MAT':x[4], 'NUM_ACCIDENTE':x[5], 'NUM_ACC_POST_CAP':x[6], 'FEC_CAPACITACION':x[7], 'ID_CLIENTE':x[8], 'ID_GENERO':x[9], 'ID_COMUNA':x[10]})
         res = json.dumps(lista)
         return HttpResponse(res, 'application/javascript')

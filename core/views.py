@@ -95,15 +95,18 @@ def inicioCliente(request):
     if request.method == 'POST' and 'btnRealizarSolicitud' in request.POST:
         fechaVisita  =   request.POST.get('fechaVisita')
         horaVisita   =   request.POST.get('horaVisita')
-        horaVisita = horaVisita[:1]
-        minutoVisita = horaVisita[:4]
+        horaVisita  = str(horaVisita)
+        print(horaVisita)
+        horaVisita = horaVisita[0:2]
+        minutoVisita = request.POST.get('horaVisita')
+        minutoVisita = minutoVisita[3:5]
         print(horaVisita, minutoVisita)
         cursor.callproc("SPD_INGRESARSOLICITUD",(fechaVisita, horaVisita, minutoVisita, IDCLIENTE))
 
     return render(request,'core/vistaCliente/inicioCliente.html', data)
 
 def modificarDatos(request):
-    lista = retornaDataUsuarioCliente(request.session['S'])
+    lista = retornaDataUsuarioCliente(request.session['S']) 
     data = lista[0]['id_cliente'] 
     print(data)
     ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
@@ -117,3 +120,11 @@ def modificarDatos(request):
         correo        = request.POST.get('correo')
         cursor.callproc("SPD_MODIFICARCLIENTE",(data, nombreEmpresa, rutEmpresa, direccion, telefono, comunas,correo))
     return render(request, 'core/vistaCliente/modificarDatos.html', ClienteEmpresa)
+
+
+def solicitarCapacitacion(request):
+    lista = retornaDataUsuarioCliente(request.session['S'])
+    data = lista[0]['id_cliente'] 
+    print(data)
+    ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
+    return render(request,'core/vistaCliente/solicitarCapacitacion.html',ClienteEmpresa)

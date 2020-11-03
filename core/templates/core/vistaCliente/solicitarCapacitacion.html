@@ -1,0 +1,40 @@
+{% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">RUT ASISTENTE</th>
+            <th scope="col">ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <select class="form-control asistentes text text-dark" id="asistentes" name="asistentes">
+                    <option selected hidden>Seleccione Asistente</option>
+                </select>
+            </td>
+            <td>
+                <button class="btn btnColor" onclick="validador()">Agregar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table class="table" id="listAsistentes">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">DATOS ASISTENTE</th>
+            <th scope="col">ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-center mt-3">
+    <button class="btn btnColor btn-block" type="submit">
+        Guardar Capacitacion
+    </button>
+</div>
+{% endblock contenidoCliente %}
