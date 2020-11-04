@@ -38,10 +38,10 @@
       <span class="navbar-toggler-icon"></span>
     </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <a class="nav-link btn btnColor ml-2" data-toggle="modal" data-target="#solicitarVisita">Solicitar Visita</a>
+            <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#solicitarVisita">Solicitar Visita</a>
             <a class="nav-link btn btnColor ml-2" data-toggle="modal" href="{% url 'solicitarCapacitacion' %}">Solicitar Capacitacion</a>
-            <a class="nav-link btn btnColor ml-2" data-toggle="modal" data-target="#solicitarAsesoria">Solicitar Asesoria</a>
-            <a class="nav-link btn btnColor ml-2" data-toggle="modal" data-target="#modificarChecklist">Modificar CheckList</a>
+            <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#solicitarAsesoria">Solicitar Asesoria</a>
+            <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#modificarChecklist">Modificar CheckList</a>
             <a class="nav-link btn btnColor ml-2" href="{% url 'modificarDatos' %}">Modificar Datos</a>
 
             <div class="navbar-nav ml-auto ">
@@ -83,19 +83,23 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Solicitar Asesoria</h5>
                     </div>
-                    <div class="modal-body">
-                        <label>Motivo Asesoria</label>
-                        <select class="form-control" id="servicios" name="servicios">
-                        <option value="0" selected>Seleccione Servicio</option>
-                    </select>
-
-                        <label>Fecha de Asesoria</label>
-                        <input type="date" name="fechaAsesoria" id="fechaAsesoria">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn bntColor text text-dark border btn-outline-danger" data-dismiss="modal">Cerrar</button>
-                        <button class="btn btnColor">Realizar Solicitud</button>
-                    </div>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <label>Motivo Asesoria</label>
+                            <select class="form-control" id="servicios" name="servicios">
+                                <option value="0" selected>Seleccione Servicio</option>
+                            </select>
+                            <label>Fecha de Asesoria</label>
+                            <input type="date" name="fechaAsesoria" id="fechaAsesoria">
+                            <label>Hora de Asesoria</label>
+                            <input type="time" name="horaAsesoria" id="horaAsesoria">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn bntColor text text-dark border btn-outline-danger" data-dismiss="modal">Cerrar</button>
+                            <button class="btn btnColor" id="btnRealizarAsesoria" name="btnRealizarAsesoria" type="submit">Realizar Solicitud</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -108,16 +112,19 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Modificacion de Checklist</h5>
                     </div>
-                    <div class="modal-body">
-                        <label>Fecha de Modificacion</label>
-                        <input type="date" name="fechaModificacion" id="fechaModificacion">
-                        <label>Hora de Modificacion</label>
-                        <input type="time" name="horaModificacion" id="horaModificacion">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn bntColor text text-dark border btn-outline-danger" data-dismiss="modal">Cerrar</button>
-                        <button class="btn btnColor">Realizar Modificacion</button>
-                    </div>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <label>Fecha de Modificacion</label>
+                            <input type="date" name="fechaModificacion" id="fechaModificacion">
+                            <label>Hora de Modificacion</label>
+                            <input type="time" name="horaModificacion" id="horaModificacion">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn bntColor text text-dark border btn-outline-danger" data-dismiss="modal">Cerrar</button>
+                            <button class="btn btnColor" id="btnRealizarModificacion" name="btnRealizarModificacion" type="submit">Realizar Modificacion</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -126,11 +133,12 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{% static 'core/js/jquery.min.js'%}"></script>
-    <script src="{% static 'core/js/popper.min.js'%}"></script>
     <script src="{% static 'core/js/bootstrap.min.js'%}"></script>
     <script src="{% static 'core/js/regionesycomunas.js'%}"></script>
     <script src="{% static 'core/js/select2.full.min.js'%}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="{% static 'core/js/popper.min.js'%}"></script>
+
 
 
 </body>

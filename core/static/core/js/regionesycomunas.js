@@ -91,7 +91,7 @@ const GetAsistentes = () => {
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         type: "GET",
-        url: 'http://127.0.0.1:8000/API/Asistentes',
+        url: 'http://127.0.0.1:8000/API/Asistentes/',
         success: function(res) {
             $.each(JSON.parse(res), function(i, x) {
                 $('#asistentes').append(`<option value="${x.ID_ASISTENTE}">${x.RUT_TRABAJADOR} , ${x.NOMBRE} ${x.AP_PAT} ${x.AP_MAT}</option>`);
@@ -154,3 +154,28 @@ const agregar = () => {
 const eliminarFila = (x) => {
     $(`#i${x}`).remove();
 };
+
+var x = [];
+const getList = () => {
+    document.getElementById('listAsistentes').addEventListener('click', function(item) {
+            var row = item.path[1];
+            var row_value = "";
+            for (var j = 0; j < row.cells.length; j++) {
+
+                x += row.cells[j].innerHTML;
+                alert(x)
+            }
+            alert(row_value);
+        }
+
+    );
+};
+/* const PostCapacitacion = () => {
+    $('#listAsistentes tr').each(function(i) {
+        var tds = $(this).find('td').eq(0).html();
+        for (x in tds) {
+
+        }
+
+    });
+}; */

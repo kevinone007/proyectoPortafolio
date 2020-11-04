@@ -81,6 +81,9 @@ class Asistentes(APIView):
         data = cursor.execute('select ID_ASISTENTE, RUT_TRABAJADOR, NOMBRE, AP_PAT, AP_MAT, NUM_ACCIDENTE, NUM_ACC_POST_CAP, FEC_CAPACITACION, ID_CLIENTE, ID_GENERO, ID_COMUNA from ASISTENTE FETCH FIRST 20 ROWS ONLY')
         lista = []
         for x in data:
-            lista.append({'ID_ASISTENTE':x[0], 'RUT_TRABAJADOR':x[1], 'NOMBRE':x[2], 'AP_PAT':x[3], 'AP_MAT':x[4], 'NUM_ACCIDENTE':x[5], 'NUM_ACC_POST_CAP':x[6], 'FEC_CAPACITACION':x[7], 'ID_CLIENTE':x[8], 'ID_GENERO':x[9], 'ID_COMUNA':x[10]})
+            lista.append({'ID_ASISTENTE':x[0], 'RUT_TRABAJADOR':x[1], 'NOMBRE':x[2], 'AP_PAT':x[3], 'AP_MAT':x[4], 'NUM_ACCIDENTE':x[5], 'NUM_ACC_POST_CAP':x[6], 'FEC_CAPACITACION':str(x[7]), 'ID_CLIENTE':x[8], 'ID_GENERO':x[9], 'ID_COMUNA':x[10]})
         res = json.dumps(lista)
         return HttpResponse(res, 'application/javascript')
+
+#class Capacitacion(APIView):
+#    def post(self, request):

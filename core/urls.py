@@ -17,4 +17,5 @@ urlpatterns = [
     path('inicioCliente', inicioCliente, name='inicioCliente'),
     path('modificarDatos', modificarDatos, name='modificarDatos'),
     path('mataSesion', mataSesion, name='mataSesion')
+    
 ]

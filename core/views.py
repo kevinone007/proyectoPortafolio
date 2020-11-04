@@ -53,7 +53,18 @@ def login(request):
     return render(request,'core/login.html',  {'nbar': 'login'})
 
 def registro(request):
-
+    if request.method == 'POST' :
+        nombreEmpresa = request.POST.get('nombreEmpresa')
+        rutEmpresa    = request.POST.get('rutEmpresa')
+        direccion     = request.POST.get('direccion')
+        telefono      = request.POST.get('telefono')
+        comunas       = request.POST.get('comunas')
+        correo        = request.POST.get('correo')
+        rubros        = request.POST.get('rubros')
+        user          = rutEmpresa
+        passwd        = rutEmpresa[0:4]
+        print(correo, user, passwd)
+        cursor.callproc("SPD_ADDCLIENTEEMPRESA",(rutEmpresa, nombreEmpresa, telefono, correo, direccion,  comunas, rubros, user, passwd))
     return render(request,'core/registro.html',  {'nbar': 'registro'})
 
 def retornaDataUsuarioCliente(USER):
@@ -91,7 +102,7 @@ def inicioCliente(request):
             actividades.append({'NOMBRE':x[0], 'FECHA':x[1], 'PROFESIONAL':x[2] ,'DESCRIPCION':x[3]})
     data = {'data': lista[0], 'actividad': actividades } #cuando viene con [0] es un array y cuando viene solo es un objeto, el cual es iterable por el FOR 
    
-   ###############################################
+   ####################SPD_INGRESARSOLICITUD###########################
     if request.method == 'POST' and 'btnRealizarSolicitud' in request.POST:
         fechaVisita  =   request.POST.get('fechaVisita')
         horaVisita   =   request.POST.get('horaVisita')
@@ -103,7 +114,33 @@ def inicioCliente(request):
         print(horaVisita, minutoVisita)
         cursor.callproc("SPD_INGRESARSOLICITUD",(fechaVisita, horaVisita, minutoVisita, IDCLIENTE))
 
-    return render(request,'core/vistaCliente/inicioCliente.html', data)
+
+    ###################SPD_INGRESARASESORIA############################
+    if request.method == 'POST' and 'btnRealizarAsesoria' in request.POST:
+        fechaAsesoria  =   request.POST.get('fechaAsesoria')
+        horaAsesoria   =   request.POST.get('horaAsesoria')
+        servicios       =    request.POST.get('servicios')
+        horaAsesoria  = str(horaAsesoria)
+        print(horaAsesoria)
+        horaAsesoria = horaAsesoria[0:2]
+        minutoAsesoria = request.POST.get('horaAsesoria')
+        minutoAsesoria = minutoAsesoria[3:5]
+        print(horaAsesoria, minutoAsesoria, servicios)
+        cursor.callproc("SPD_INGRESARASESORIA",(fechaAsesoria, horaAsesoria, minutoAsesoria, IDCLIENTE, servicios))
+
+    ####################SPD_INGRESARMODIFICACION###########################
+    if request.method == 'POST' and 'btnRealizarModificacion' in request.POST:
+        fechaModificacion  =   request.POST.get('fechaModificacion')
+        horaModificacion   =   request.POST.get('horaModificacion')
+        horaModificacion  = str(horaModificacion)
+        print(horaModificacion)
+        horaModificacion = horaModificacion[0:2]
+        minutoVisita = request.POST.get('horaModificacion')
+        minutoVisita = minutoVisita[3:5]
+        print(horaModificacion, minutoVisita)
+        cursor.callproc("SPD_INGRESARMODIFICACION",(fechaModificacion, horaModificacion, minutoVisita, IDCLIENTE))
+
+    return render(request,'core/vistaCliente/inicioCliente.html', data )
 
 def modificarDatos(request):
     lista = retornaDataUsuarioCliente(request.session['S']) 
