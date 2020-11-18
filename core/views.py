@@ -48,8 +48,7 @@ def login(request):
                     return redirect(inicioCliente)
 
                 if(dataGet[0]['id_rol'] == 3):
-                    print('WENA TIPO 3')    
-
+                    print('WENA TIPO 3')   
     return render(request,'core/login.html',  {'nbar': 'login'})
 
 def registro(request):
@@ -165,3 +164,26 @@ def solicitarCapacitacion(request):
     print(data)
     ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
     return render(request,'core/vistaCliente/solicitarCapacitacion.html',ClienteEmpresa)
+
+def addAsistente(request):
+    lista = retornaDataUsuarioCliente(request.session['S'])
+    IDCLIENTE = lista[0]['id_cliente'] 
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SPD_EMPLEADOS",[IDCLIENTE, out_cur])
+    empleados = []
+    for x in out_cur:
+            empleados.append({'RUT':x[0], 'NOMBRE':x[1], 'AP':x[2], 'AM':x[3], 'COMUNA':x[4], 'GENERO':x[5], 'ID':x[6]})
+    ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(IDCLIENTE), 'empleados': empleados}
+
+    #############################################################################
+    if request.method == 'POST' and 'btnInsertar' in request.POST:
+        rut  =   request.POST.get('rutEmpleado')
+        nombre   =   request.POST.get('nombreEmpleado')
+        apep   =   request.POST.get('apEmpleado')
+        apem   =   request.POST.get('amEmpleado')
+        comunas   =   request.POST.get('genero')
+        genero   =   request.POST.get('comunas')
+        print(rut,nombre,apep,apem,comunas,genero,IDCLIENTE)
+        cursor.callproc("SPD_INSERTAREMPLEADO",(rut, nombre, apep, apem, comunas, genero, IDCLIENTE))
+        
+    return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)

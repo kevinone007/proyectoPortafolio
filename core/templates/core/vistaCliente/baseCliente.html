@@ -29,6 +29,7 @@
             background-color: #ABD1B5 !important
         }
     </style>
+
 </head>
 
 <body class="bodyColor">
@@ -38,12 +39,13 @@
       <span class="navbar-toggler-icon"></span>
     </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <a class="nav-link btn btnColor ml-2" {% ifequal request.path '/inicioCliente' %} style="display:none" {% endifequal %} href="{% url 'inicioCliente' %}">Inicio</a>
             <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#solicitarVisita">Solicitar Visita</a>
             <a class="nav-link btn btnColor ml-2" data-toggle="modal" href="{% url 'solicitarCapacitacion' %}">Solicitar Capacitacion</a>
             <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#solicitarAsesoria">Solicitar Asesoria</a>
             <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#modificarChecklist">Modificar CheckList</a>
             <a class="nav-link btn btnColor ml-2" href="{% url 'modificarDatos' %}">Modificar Datos</a>
-
+            <a class="nav-link btn btnColor ml-2" href="{% url 'addAsistente' %}">Mantenedor Empleados</a>
             <div class="navbar-nav ml-auto ">
                 <a class="nav-link float-right btn bntColor text text-dark border btn-outline-danger ml-2" type="submit" href="{% url 'mataSesion' %}" name="cerrar_session">Cerrar Sesion</a>
             </div>

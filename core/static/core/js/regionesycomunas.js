@@ -155,27 +155,137 @@ const eliminarFila = (x) => {
     $(`#i${x}`).remove();
 };
 
-var x = [];
-const getList = () => {
-    document.getElementById('listAsistentes').addEventListener('click', function(item) {
-            var row = item.path[1];
-            var row_value = "";
-            for (var j = 0; j < row.cells.length; j++) {
 
-                x += row.cells[j].innerHTML;
-                alert(x)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
-            alert(row_value);
         }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
 
-    );
-};
-/* const PostCapacitacion = () => {
+$('#guardarCapa').click(function() {
     $('#listAsistentes tr').each(function(i) {
-        var tds = $(this).find('td').eq(0).html();
-        for (x in tds) {
-
+        if (i > 0) {
+            var idUSER = $(this).find('td').eq(0).html();
+            var fecha = $("#fechaCapacitacion").val();
+            $.ajax({
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+                type: "POST",
+                dataType: 'json',
+                data: JSON.stringify({ 'fecha': fecha, 'idUSER': idUSER }),
+                url: `http://127.0.0.1:8000/API/Capacitacion/`,
+                error: function(err) {
+                    console.log(err);
+                }
+            });
         }
-
     });
-}; */
+});
+
+
+$(function() {
+    const rowsPerPage = 5;
+    const rows = $('#table-actividades tbody tr');
+    const rowsCount = rows.length;
+    const pageCount = Math.ceil(rowsCount / rowsPerPage); // avoid decimals
+    const numbers = $('#numbers');
+
+    // Generate the pagination.
+    for (var i = 0; i < pageCount; i++) {
+        numbers.append('<li class="page-item"><a class="page-link" href="#">' + (i + 1) + '</a></li>');
+    }
+
+    // Mark the first page link as active.
+    $('#numbers li:first-child a').addClass('active');
+
+    // Display the first set of rows.
+    displayRows(1);
+
+    // On pagination click.
+    $('#numbers li a').click(function(e) {
+        var $this = $(this);
+
+        e.preventDefault();
+
+        // Remove the active class from the links.
+        $('#numbers li a').removeClass('active');
+
+        // Add the active class to the current link.
+        $this.addClass('active');
+
+        // Show the rows corresponding to the clicked page ID.
+        displayRows($this.text());
+    });
+
+    // Function that displays rows for a specific page.
+    function displayRows(index) {
+        var start = (index - 1) * rowsPerPage;
+        var end = start + rowsPerPage;
+
+        // Hide all rows.
+        rows.hide();
+
+        // Show the proper rows for this page.
+        rows.slice(start, end).show();
+    }
+});
+
+
+
+
+$(function() {
+    const rowsPerPage = 5;
+    const rows = $('#table-empleados tbody tr');
+    const rowsCount = rows.length;
+    const pageCount = Math.ceil(rowsCount / rowsPerPage); // avoid decimals
+    const numbers = $('#numbers');
+
+    // Generate the pagination.
+    for (var i = 0; i < pageCount; i++) {
+        numbers.append('<li class="page-item"><a class="page-link" href="#">' + (i + 1) + '</a></li>');
+    }
+
+    // Mark the first page link as active.
+    $('#numbers li:first-child a').addClass('active');
+
+    // Display the first set of rows.
+    displayRows(1);
+
+    // On pagination click.
+    $('#numbers li a').click(function(e) {
+        var $this = $(this);
+
+        e.preventDefault();
+
+        // Remove the active class from the links.
+        $('#numbers li a').removeClass('active');
+
+        // Add the active class to the current link.
+        $this.addClass('active');
+
+        // Show the rows corresponding to the clicked page ID.
+        displayRows($this.text());
+    });
+
+    // Function that displays rows for a specific page.
+    function displayRows(index) {
+        var start = (index - 1) * rowsPerPage;
+        var end = start + rowsPerPage;
+
+        // Hide all rows.
+        rows.hide();
+
+        // Show the proper rows for this page.
+        rows.slice(start, end).show();
+    }
+});

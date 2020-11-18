@@ -1,0 +1,182 @@
+{% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
+<style>
+    /* Table styles. */
+    
+    td,
+    th {
+        text-align: left;
+        padding: .5rem 1rem;
+    }
+    
+    .pagination {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+    
+    #numbers {
+        padding: 0;
+        margin: 0 2rem;
+        list-style-type: none;
+        display: flex;
+    }
+    
+    #numbers li a {
+        color: #000;
+        padding: .5rem 1rem;
+        text-decoration: none;
+        opacity: .7;
+    }
+    
+    #numbers li a.active {
+        opacity: 1;
+        background: #ABD1B5;
+        color: #333;
+    }
+</style>
+<h2 class="text text-center">Agregue empleados a sus registros</h2>
+
+<form method="POST" class="ml-3 mr-3 mb-3 mt-3">
+    {% csrf_token %}
+    <h3>Datos empleado</h3>
+    <div class="row p-2">
+        <div class="form-group col-4">
+            <label>Nombre</label>
+            <input type="text" class="form-control" id="nombreEmpleado" name="nombreEmpleado" placeholder="Nombre" required>
+        </div>
+        <div class="form-group col-4">
+            <label>Apellido Parterno</label>
+            <input type="text" class="form-control" id="apEmpleado" name="apEmpleado" placeholder="Apellido Parterno" required>
+        </div>
+        <div class="form-group col-4">
+            <label>Apellido Materno</label>
+            <input type="text" class="form-control" id="amEmpleado" name="amEmpleado" placeholder="Apellido Materno" required>
+        </div>
+        <div class="form-group col-2">
+            <label>Rut</label>
+            <input type="text" class="form-control" id="rutEmpleado" name="rutEmpleado" placeholder="Rut" required>
+        </div>
+        <div class="form-group col-md-2">
+            <label>G&eacute;nero</label>
+            <select class="form-control" id="genero" name="genero" required>
+                <option value="0">Seleccione G&eacute;nero</option>
+                <option value="1">Masculino</option>
+                <option value="2" >Femenino</option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Region</label>
+            <select class="form-control" id="regiones" name="regiones" required>
+                <option value="" selected hidden>Seleccione Region</option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Comuna</label>
+            <select class="form-control" id="comunas" name="comunas" required>
+                <option value="" selected>Seleccione Comuna</option>
+            </select>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <button class="btn btnColor btn-block" id="btnInsertar" name="btnInsertar" type="submit">
+                Ingresar Empleado
+            </button>
+        </div>
+    </div>
+</form>
+<hr>
+<h2 class="text text-center text-dark">Lista de Empleados de la empresa {{data.user_cred}}</h2>
+{% if empleados|length == 0 %}
+<h1 class="alert alert-danger">Usted no ha registrado empleados</h1>
+{% else %}
+<table class="table" id="table-empleados">
+    <thead class="thead">
+        <tr>
+            <th scope="col">Rut</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">G&eacute;nero</th>
+            <th scope="col">Comuna</th>
+            <th scope="col">Acci&oacute;n</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for x in empleados %}
+        <tr>
+            <td hidden>{{x.ID}}</td>
+            <td>{{x.RUT}}</td>
+            <td>{{x.NOMBRE}} {{x.AP}} {{x.AM}}</td>
+            <td>{{x.GENERO}}</td>
+            <td>{{x.COMUNA}}</td>
+            <td><a class="btn btnColor btn-block" value="{{x.ID}}" id="btnModi" onClick="hideshow();" name="btnModi">Modificar</a></td>
+            <div hidden id="element">
+                <form method="POST" class="ml-3 mr-3 mb-3 mt-3">
+                    {% csrf_token %}
+                    <h3>Datos empleado</h3>
+                    <div class="row p-2">
+                        <div class="form-group col-4">
+                            <label>Nombre</label>
+                            <input type="text" class="form-control" id="nombreEmpleado" name="nombreEmpleado" placeholder="Nombre" required>
+                        </div>
+                        <div class="form-group col-4">
+                            <label>Apellido Parterno</label>
+                            <input type="text" class="form-control" id="apEmpleado" name="apEmpleado" placeholder="Apellido Parterno" required>
+                        </div>
+                        <div class="form-group col-4">
+                            <label>Apellido Materno</label>
+                            <input type="text" class="form-control" id="amEmpleado" name="amEmpleado" placeholder="Apellido Materno" required>
+                        </div>
+                        <div class="form-group col-2">
+                            <label>Rut</label>
+                            <input type="text" class="form-control" id="rutEmpleado" name="rutEmpleado" placeholder="Rut" required>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label>G&eacute;nero</label>
+                            <select class="form-control" id="genero" name="genero" required>
+                                <option value="0">Seleccione G&eacute;nero</option>
+                                <option value="1">Masculino</option>
+                                <option value="2" >Femenino</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Region</label>
+                            <select class="form-control" id="regiones" name="regiones" required>
+                                <option value="" selected hidden>Seleccione Region</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Comuna</label>
+                            <select class="form-control" id="comunas" name="comunas" required>
+                                <option value="" selected>Seleccione Comuna</option>
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3">
+                            <button class="btn btnColor btn-block" id="btnInsertar" name="btnInsertar" type="submit">
+                                Modificar Empleado
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<nav>
+    <ul class="pagination ">
+        <a id="numbers"></a>
+    </ul>
+</nav>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var cont = 0
+        if (cont == 0) {
+            $('#element').removeAttr('hidden');
+            cont = 1;
+        } else {
+            $('#element').attr('hidden', true)
+            cont = 0
+        }
+    })
+</script>
+{% endif %} {% endblock contenidoCliente %}

@@ -1,7 +1,7 @@
 {% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
 <h2><span class="badge navColor">Ingrese la fecha de la capacitacion</span></h2>
 <div>
-    <label>Fecha de Capacitacion</label>
+    <label>Fecha de Capacitaci&oacute;n</label>
     <input type="date" name="fechaCapacitacion" id="fechaCapacitacion">
 </div>
 <table class="table">
@@ -15,7 +15,6 @@
         <tr>
             <td>
                 <select class="form-control asistentes text text-dark" id="asistentes" name="asistentes">
-                    <option selected hidden>Seleccione Asistente</option>
                 </select>
             </td>
             <td>
@@ -38,7 +37,7 @@
 </table>
 
 <div class="d-flex justify-content-center mt-3">
-    <button class="btn btnColor btn-block" onclick="getList()" id="guardarCapa" type="submit">
+    <button class="btn btnColor btn-block" id="guardarCapa" type="submit">
         Guardar Capacitacion
     </button>
 </div>
