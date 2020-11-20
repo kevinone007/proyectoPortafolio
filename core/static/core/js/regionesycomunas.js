@@ -59,27 +59,23 @@ const GetComunas = (id, ID_REGION) => {
     });
 
 };
-
-
-const GetComunasModal = (id, ID_REGION) => {
-    $('#comunas option').remove();
-    console.log(ID_REGION);
-    $.ajax({
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        type: "GET",
-        url: `http://127.0.0.1:8000/API/Comunas/${ID_REGION}`,
+const change = (identificador) => {
+        $(`#comunas${identificador} option`).remove();
+        $.ajax({
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    type: "GET",
+                    url: `http://127.0.0.1:8000/API/Comunas/${$(`#regiones${identificador} option:selected`).val()}`,
         success: function(res) {
-                $.each(JSON.parse(res), function(i, x) {
-                    $(`#comunas${id}`).append(`<option value="${x.ID_COMUNA}">${x.DESCRIPCION}</option>`);
-                });
-            }
-            /* ,
-                    error: function(err) {
-                        alert('error');
-                    } */
+            $.each(JSON.parse(res), function(i, x) {
+                $(`#comunas${identificador}`).append(`<option value="${x.ID_COMUNA}">${x.DESCRIPCION}</option>`);
+            });
+        },
+        error: function(err) {
+            alert('error');
+        }
     });
-
 };
+
 
 const GetRubros = () => {
     $.ajax({
@@ -223,6 +219,17 @@ $('#guardarCapa').click(function() {
         success: function(res) {
             id = res[0].ID_ASISTENTE;
             guardar(id);
+            Swal.fire({
+                icon: 'success',
+                title: 'Capacitacion solicitada',
+                text: `Su capacitacion ha sido ingresada correctamente. TOTAL ASISTENTES: ${id.length} FECHA: ${fecha}`,
+                showConfirmButton: true,
+                timer: 10000
+            }).then(
+
+                function() { window.location.replace('/solicitarCapacitacion'); }
+
+            );
         },
         error: function(err) {
             alert('error');
@@ -247,6 +254,7 @@ const guardar = (id) => {
                     console.log(err);
                 }
             });
+
         }
     });
 }
