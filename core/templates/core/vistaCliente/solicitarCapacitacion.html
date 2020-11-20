@@ -1,5 +1,6 @@
 {% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
 <h2><span class="badge navColor">Ingrese la fecha de la capacitacion</span></h2>
+<input hidden value="{{data.id_cliente}}" id="idCliente"></input>
 <div>
     <label>Fecha de Capacitaci&oacute;n</label>
     <input type="date" name="fechaCapacitacion" id="fechaCapacitacion">

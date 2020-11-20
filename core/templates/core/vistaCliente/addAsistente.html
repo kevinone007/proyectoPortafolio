@@ -37,7 +37,6 @@
     }
 </style>
 <h2 class="text text-center">Agregue empleados a sus registros</h2>
-
 <form method="POST" class="ml-3 mr-3 mb-3 mt-3">
     {% csrf_token %}
     <h3>Datos empleado</h3>
@@ -67,9 +66,9 @@
             </select>
         </div>
         <div class="form-group col-md-4">
-            <label>Region</label>
+            <label>Regi&oacute;n</label>
             <select class="form-control" id="regiones" name="regiones" required>
-                <option value="" selected hidden>Seleccione Region</option>
+                <option value="" selected hidden>Seleccione Regi&oacute;n</option>
             </select>
         </div>
         <div class="form-group col-md-4">
@@ -108,57 +107,65 @@
             <td>{{x.NOMBRE}} {{x.AP}} {{x.AM}}</td>
             <td>{{x.GENERO}}</td>
             <td>{{x.COMUNA}}</td>
-            <td><a class="btn btnColor btn-block" value="{{x.ID}}" id="btnModi" onClick="hideshow();" name="btnModi">Modificar</a></td>
-            <div hidden id="element">
-                <form method="POST" class="ml-3 mr-3 mb-3 mt-3">
-                    {% csrf_token %}
-                    <h3>Datos empleado</h3>
-                    <div class="row p-2">
-                        <div class="form-group col-4">
-                            <label>Nombre</label>
-                            <input type="text" class="form-control" id="nombreEmpleado" name="nombreEmpleado" placeholder="Nombre" required>
+            <td><a class="btn btnColor btn-block" id="btnModi" data-toggle="modal" data-target="#modificarEmpleado{{x.ID}}" onclick="GetRegiones({{x.ID}});" name="btnModi">Modificar</a></td>
+            <!-- Modal Solicitar Visita -->
+            <div class="modal fade" id="modificarEmpleado{{x.ID}}" data-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Modificar Empleado</h5>
                         </div>
-                        <div class="form-group col-4">
-                            <label>Apellido Parterno</label>
-                            <input type="text" class="form-control" id="apEmpleado" name="apEmpleado" placeholder="Apellido Parterno" required>
-                        </div>
-                        <div class="form-group col-4">
-                            <label>Apellido Materno</label>
-                            <input type="text" class="form-control" id="amEmpleado" name="amEmpleado" placeholder="Apellido Materno" required>
-                        </div>
-                        <div class="form-group col-2">
-                            <label>Rut</label>
-                            <input type="text" class="form-control" id="rutEmpleado" name="rutEmpleado" placeholder="Rut" required>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label>G&eacute;nero</label>
-                            <select class="form-control" id="genero" name="genero" required>
-                                <option value="0">Seleccione G&eacute;nero</option>
-                                <option value="1">Masculino</option>
-                                <option value="2" >Femenino</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label>Region</label>
-                            <select class="form-control" id="regiones" name="regiones" required>
-                                <option value="" selected hidden>Seleccione Region</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label>Comuna</label>
-                            <select class="form-control" id="comunas" name="comunas" required>
-                                <option value="" selected>Seleccione Comuna</option>
-                            </select>
-                        </div>
-                        <div class="d-flex justify-content-center mt-3">
-                            <button class="btn btnColor btn-block" id="btnInsertar" name="btnInsertar" type="submit">
-                                Modificar Empleado
-                            </button>
-                        </div>
+                        <form method="POST" class="ml-3 mr-3 mb-3 mt-3">
+                            {% csrf_token %}
+                            <h3>Datos empleado</h3>
+                            <div class="row p-2">
+                                <div class="form-group col-4">
+                                    <label>Nombre</label>
+                                    <input type="text" class="form-control" id="nombreEmpleado" name="nombreEmpleado" value="{{x.NOMBRE}}" placeholder="Nombre" required>
+                                </div>
+                                <div class="form-group col-4">
+                                    <label>Apellido Parterno</label>
+                                    <input type="text" class="form-control" id="apEmpleado" name="apEmpleado" value="{{x.AP}}" placeholder="Apellido Parterno" required>
+                                </div>
+                                <div class="form-group col-4">
+                                    <label>Apellido Materno</label>
+                                    <input type="text" class="form-control" id="amEmpleado" name="amEmpleado" value="{{x.AM}}" placeholder="Apellido Materno" required>
+                                </div>
+                                <div class="form-group col-2">
+                                    <label>Rut</label>
+                                    <input type="text" class="form-control" id="rutEmpleado" name="rutEmpleado" placeholder="Rut" value="{{x.RUT}}" required>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>G&eacute;nero</label>
+                                    <select class="form-control" id="genero" name="genero" required>
+                    <option value="0">Seleccione G&eacute;nero</option>
+                    <option value="1">Masculino</option>
+                    <option value="2" >Femenino</option>
+                </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Regi&oacute;n</label>
+                                    <select class="form-control" id="regiones{{x.ID}}" onclick=" GetComunasModal({{x.ID}});" name="regiones1" required>
+                    <option value="" selected hidden>Seleccione Region</option>
+                </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Comuna</label>
+                                    <select class="form-control" id="comunas{{x.ID}}" name="comunas" required>
+                    <option value="" selected>Seleccione Comuna</option>
+                </select>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn bntColor text text-dark border btn-outline-danger" data-dismiss="modal">Cerrar</button>
+                                    <button class="btn btnColor" id="btnRealizarSolicitud" name="btnRealizarSolicitud" type="submit">Realizar Solicitud</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </tr>
+
         {% endfor %}
     </tbody>
 </table>
@@ -167,16 +174,6 @@
         <a id="numbers"></a>
     </ul>
 </nav>
-<script type="text/javascript">
-    $(document).ready(function() {
-        var cont = 0
-        if (cont == 0) {
-            $('#element').removeAttr('hidden');
-            cont = 1;
-        } else {
-            $('#element').attr('hidden', true)
-            cont = 0
-        }
-    })
-</script>
+
+
 {% endif %} {% endblock contenidoCliente %}

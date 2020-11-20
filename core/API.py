@@ -25,7 +25,6 @@ class Login(APIView):
             res = json.dumps([{'RES':0}])
         else:
             res = json.dumps(lista)
-        print(res)
         return HttpResponse(res, 'application/javascript')
 
 
@@ -98,5 +97,30 @@ class Capacitacion(APIView):
         data = request.data 
         fecha = data['fecha'] 
         idUSER = data['idUSER'] 
-        cursor.callproc('SPD_CAPACITACION',[str(fecha),idUSER,out_cur])
+        idActividad = data['idActividad']
+        print(f'{fecha} {idUSER} {idActividad}')
+        cursor.callproc('SPD_CAPACITACION',[fecha,idUSER,idActividad])
         return HttpResponse('application/javascript')
+
+class InsertActividadCapacitacion(APIView):
+    def post(self, request):
+        django_cursor = connection.cursor()
+        cursor = django_cursor.connection.cursor()
+        out_cur = django_cursor.connection.cursor()
+        data = request.data 
+        fecha = data['fecha'] 
+        idCliente = data['idCliente'] 
+        cursor.callproc('SPD_INSERTACTIVIDADCAPACITACION',[str(fecha),idCliente])
+        return HttpResponse('application/javascript')
+
+class ACTIVIDADID(APIView):
+    def get(self, request, idEmpresa):
+        django_cursor = connection.cursor()
+        cursor = django_cursor.connection.cursor()
+        out_cur = django_cursor.connection.cursor()
+        cursor.callproc('SPD_ACTIVIDADID',[idEmpresa,out_cur])
+        lista = []
+        for x in out_cur:
+            lista.append({'ID_ASISTENTE':x[0]})
+        res = json.dumps(lista)
+        return HttpResponse(res, 'application/javascript')

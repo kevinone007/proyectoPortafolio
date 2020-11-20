@@ -1,6 +1,7 @@
 $(document).ready(function() {
-    GetRegiones();
 
+    id = 0;
+    GetRegiones(0);
     jQuery('#regiones').change(function() {
 
         ID_REGION = $('#regiones').val();
@@ -8,7 +9,7 @@ $(document).ready(function() {
         if (ID_REGION == '0') {
             alert('Seleccione una region');
         } else {
-            GetComunas(ID_REGION);
+            GetComunas(0, ID_REGION);
         }
 
     });
@@ -16,16 +17,40 @@ $(document).ready(function() {
     GetServicios();
     GetAsistentes();
     $('.asistentes').select2();
-});
-const GetRegiones = () => {
 
+});
+
+const GetRegiones = (id) => {
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         type: "GET",
         url: 'http://127.0.0.1:8000/API/Regiones/',
         success: function(res) {
+
             $.each(JSON.parse(res), function(i, x) {
-                $('#regiones').append(`<option value="${x.ID_REGION}">${x.DESCRIPCION}</option>`);
+                if (id == 0) {
+                    $(`#regiones`).append(`<option value="${x.ID_REGION}">${x.DESCRIPCION}</option>`);
+                } else {
+                    $(`#regiones${id}`).append(`<option value="${x.ID_REGION}">${x.DESCRIPCION}</option>`);
+                }
+            });
+        },
+        error: function(err) {
+            alert('error');
+        }
+    });
+};
+
+const GetComunas = (id, ID_REGION) => {
+    $('#comunas option').remove();
+    $.ajax({
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        type: "GET",
+        url: `http://127.0.0.1:8000/API/Comunas/${ID_REGION}`,
+        success: function(res) {
+            $.each(JSON.parse(res), function(i, x) {
+                $('#comunas').append(`<option value="${x.ID_COMUNA}">${x.DESCRIPCION}</option>`);
+
             });
         },
         error: function(err) {
@@ -35,20 +60,23 @@ const GetRegiones = () => {
 
 };
 
-const GetComunas = (ID_REGION) => {
+
+const GetComunasModal = (id, ID_REGION) => {
     $('#comunas option').remove();
+    console.log(ID_REGION);
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         type: "GET",
         url: `http://127.0.0.1:8000/API/Comunas/${ID_REGION}`,
         success: function(res) {
-            $.each(JSON.parse(res), function(i, x) {
-                $('#comunas').append(`<option value="${x.ID_COMUNA}">${x.DESCRIPCION}</option>`);
-            });
-        },
-        error: function(err) {
-            alert('error');
-        }
+                $.each(JSON.parse(res), function(i, x) {
+                    $(`#comunas${id}`).append(`<option value="${x.ID_COMUNA}">${x.DESCRIPCION}</option>`);
+                });
+            }
+            /* ,
+                    error: function(err) {
+                        alert('error');
+                    } */
     });
 
 };
@@ -174,6 +202,37 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 
 $('#guardarCapa').click(function() {
+    var fecha = $("#fechaCapacitacion").val();
+    var idCliente = $("#idCliente").val();
+    $.ajax({
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+        type: "POST",
+        dataType: 'json',
+        data: JSON.stringify({ 'fecha': fecha, 'idCliente': idCliente }),
+        url: `http://127.0.0.1:8000/API/InsertActividadCapacitacion/`,
+        error: function(err) {
+            console.log(err);
+        }
+    });
+
+    $.ajax({
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        type: "GET",
+        url: `http://127.0.0.1:8000/API/ACTIVIDADID/${idCliente}`,
+        dataType: 'json',
+        success: function(res) {
+            id = res[0].ID_ASISTENTE;
+            guardar(id);
+        },
+        error: function(err) {
+            alert('error');
+        }
+    });
+    console.log(id);
+
+});
+
+const guardar = (id) => {
     $('#listAsistentes tr').each(function(i) {
         if (i > 0) {
             var idUSER = $(this).find('td').eq(0).html();
@@ -182,7 +241,7 @@ $('#guardarCapa').click(function() {
                 headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
                 type: "POST",
                 dataType: 'json',
-                data: JSON.stringify({ 'fecha': fecha, 'idUSER': idUSER }),
+                data: JSON.stringify({ fecha: fecha, idUSER: idUSER, idActividad: id }),
                 url: `http://127.0.0.1:8000/API/Capacitacion/`,
                 error: function(err) {
                     console.log(err);
@@ -190,7 +249,7 @@ $('#guardarCapa').click(function() {
             });
         }
     });
-});
+}
 
 
 $(function() {
