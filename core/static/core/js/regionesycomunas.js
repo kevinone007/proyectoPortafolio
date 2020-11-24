@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 $(document).ready(function() {
 
     id = 0;
@@ -17,7 +18,6 @@ $(document).ready(function() {
     GetServicios();
     GetAsistentes();
     $('.asistentes').select2();
-
 });
 
 const GetRegiones = (id) => {
@@ -59,7 +59,7 @@ const GetComunas = (id, ID_REGION) => {
     });
 
 };
-const change = (identificador) => {
+const ComunasById = (identificador) => {
         $(`#comunas${identificador} option`).remove();
         $.ajax({
                     headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
@@ -76,6 +76,9 @@ const change = (identificador) => {
     });
 };
 
+const deleteRegionesById = (identity) =>{
+    $(`#regiones${identity} option`).remove();
+};
 
 const GetRubros = () => {
     $.ajax({
@@ -169,7 +172,7 @@ const agregar = () => {
                     <td style="display:none" >${x.cod}</td>
                     <td>${x.nombre}</td>
                     <td><button onclick="eliminarFila('${x.cod}')" class="btn btnColor">Eliminar</button></td>
-                </tr>`
+                </tr>`;
     });
     $('#listAsistentes').append(fila);
 };
@@ -207,7 +210,7 @@ $('#guardarCapa').click(function() {
         data: JSON.stringify({ 'fecha': fecha, 'idCliente': idCliente }),
         url: `http://127.0.0.1:8000/API/InsertActividadCapacitacion/`,
         error: function(err) {
-            console.log(err);
+            alert('error');
         }
     });
 
@@ -235,8 +238,6 @@ $('#guardarCapa').click(function() {
             alert('error');
         }
     });
-    console.log(id);
-
 });
 
 const guardar = (id) => {
@@ -251,21 +252,21 @@ const guardar = (id) => {
                 data: JSON.stringify({ fecha: fecha, idUSER: idUSER, idActividad: id }),
                 url: `http://127.0.0.1:8000/API/Capacitacion/`,
                 error: function(err) {
-                    console.log(err);
+                    alert('error');
                 }
             });
 
         }
     });
-}
+};
 
 
 $(function() {
-    const rowsPerPage = 5;
-    const rows = $('#table-actividades tbody tr');
-    const rowsCount = rows.length;
-    const pageCount = Math.ceil(rowsCount / rowsPerPage); // avoid decimals
-    const numbers = $('#numbers');
+    var rowsPerPage = 5;
+    var rows = $('#table-actividades tbody tr');
+    var rowsCount = rows.length;
+    var pageCount = Math.ceil(rowsCount / rowsPerPage); // avoid decimals
+    var numbers = $('#numbers');
 
     // Generate the pagination.
     for (var i = 0; i < pageCount; i++) {
@@ -311,11 +312,11 @@ $(function() {
 
 
 $(function() {
-    const rowsPerPage = 5;
-    const rows = $('#table-empleados tbody tr');
-    const rowsCount = rows.length;
-    const pageCount = Math.ceil(rowsCount / rowsPerPage); // avoid decimals
-    const numbers = $('#numbers');
+    var rowsPerPage = 5;
+    var rows = $('#table-empleados tbody tr');
+    var rowsCount = rows.length;
+    var pageCount = Math.ceil(rowsCount / rowsPerPage); // avoid decimals
+    var numbers = $('#numbers');
 
     // Generate the pagination.
     for (var i = 0; i < pageCount; i++) {
@@ -356,3 +357,20 @@ $(function() {
         rows.slice(start, end).show();
     }
 });
+
+// Valida el rut con su cadena completa "XXXXXXXX-X"
+const rutValid = (rutCompleto) => {
+    if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rutCompleto)) return false;
+    var tmp = rutCompleto.split("-");
+    var digv = tmp[1];
+    var rutx = tmp[0];
+    if (digv == "K") digv = "k";
+    return dvValid(rutx) == digv;
+};
+const dvValid = (T) => {
+    var M = 0,
+        S = 1;
+    for (; T; T = Math.floor(T / 10))
+        S = (S + (T % 10) * (9 - (M++ % 6))) % 11;
+    return S ? S - 1 : "k";
+};

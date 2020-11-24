@@ -62,7 +62,6 @@ def registro(request):
         rubros        = request.POST.get('rubros')
         user          = rutEmpresa
         passwd        = rutEmpresa[0:4]
-        print(correo, user, passwd)
         cursor.callproc("SPD_ADDCLIENTEEMPRESA",(rutEmpresa, nombreEmpresa, telefono, correo, direccion,  comunas, rubros, user, passwd))
     return render(request,'core/registro.html',  {'nbar': 'registro'})
 
@@ -97,20 +96,40 @@ def inicioCliente(request):
     out_cur = django_cursor.connection.cursor()
     cursor.callproc("SPD_ACTIVIDADES",[IDCLIENTE, out_cur])
     actividades = []
+    fechaLimpia = []
     for x in out_cur:
-            actividades.append({'NOMBRE':x[0], 'FECHA':x[1], 'PROFESIONAL':x[2] ,'DESCRIPCION':x[3]})
-    data = {'data': lista[0], 'actividad': actividades } #cuando viene con [0] es un array y cuando viene solo es un objeto, el cual es iterable por el FOR 
+            fecha = x[1]
+            fecha =  fecha.split(" ")
+            hora = fecha[1]
+            fecha = fecha[0]  
+            hora =  hora.split(":")
+            minuto = hora[1]
+            hora = hora[0]
+            if len(hora)<2:
+                hora = '0'+hora
+            else:
+                hora = hora
+            if len(minuto)<2:
+                minuto = '0'+minuto
+            else:
+                minuto = minuto
+            fecha = fecha.split("-")
+            dia = fecha[2]
+            mes = fecha[1]
+            anio = fecha[0]
+            fecha = dia+'-'+mes+'-'+anio
+            hora = hora+':'+minuto
+            actividades.append({'NOMBRE':x[0], 'PROFESIONAL':x[2], 'FECHALIMPIA':fecha, 'HORA':hora,'DESCRIPCION':x[3]})
+    data = {'data': lista[0], 'actividad': actividades} #cuando viene con [0] es un array y cuando viene solo es un objeto, el cual es iterable por el FOR 
    
    ####################SPD_INGRESARSOLICITUD###########################
     if request.method == 'POST' and 'btnRealizarSolicitud' in request.POST:
         fechaVisita  =   request.POST.get('fechaVisita')
         horaVisita   =   request.POST.get('horaVisita')
         horaVisita  = str(horaVisita)
-        print(horaVisita)
         horaVisita = horaVisita[0:2]
         minutoVisita = request.POST.get('horaVisita')
         minutoVisita = minutoVisita[3:5]
-        print(horaVisita, minutoVisita)
         cursor.callproc("SPD_INGRESARSOLICITUD",(fechaVisita, horaVisita, minutoVisita, IDCLIENTE))
 
 
@@ -120,11 +139,9 @@ def inicioCliente(request):
         horaAsesoria   =   request.POST.get('horaAsesoria')
         servicios       =    request.POST.get('servicios')
         horaAsesoria  = str(horaAsesoria)
-        print(horaAsesoria)
         horaAsesoria = horaAsesoria[0:2]
         minutoAsesoria = request.POST.get('horaAsesoria')
         minutoAsesoria = minutoAsesoria[3:5]
-        print(horaAsesoria, minutoAsesoria, servicios)
         cursor.callproc("SPD_INGRESARASESORIA",(fechaAsesoria, horaAsesoria, minutoAsesoria, IDCLIENTE, servicios))
 
     ####################SPD_INGRESARMODIFICACION###########################
@@ -132,11 +149,9 @@ def inicioCliente(request):
         fechaModificacion  =   request.POST.get('fechaModificacion')
         horaModificacion   =   request.POST.get('horaModificacion')
         horaModificacion  = str(horaModificacion)
-        print(horaModificacion)
         horaModificacion = horaModificacion[0:2]
         minutoVisita = request.POST.get('horaModificacion')
         minutoVisita = minutoVisita[3:5]
-        print(horaModificacion, minutoVisita)
         cursor.callproc("SPD_INGRESARMODIFICACION",(fechaModificacion, horaModificacion, minutoVisita, IDCLIENTE))
 
     return render(request,'core/vistaCliente/inicioCliente.html', data )
@@ -144,14 +159,13 @@ def inicioCliente(request):
 def modificarDatos(request):
     lista = retornaDataUsuarioCliente(request.session['S']) 
     data = lista[0]['id_cliente'] 
-    print(data)
     ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
 
     if request.method == 'POST' :
         nombreEmpresa = request.POST.get('nombreEmpresa')
         rutEmpresa    = request.POST.get('rutEmpresa')
         direccion     = request.POST.get('direccion')
-        telefono      = request.POST.get('telefono')
+        telefono      = request.POST.get('celulari')
         comunas       = request.POST.get('comunas')
         correo        = request.POST.get('correo')
         cursor.callproc("SPD_MODIFICARCLIENTE",(data, nombreEmpresa, rutEmpresa, direccion, telefono, comunas,correo))
@@ -161,7 +175,6 @@ def modificarDatos(request):
 def solicitarCapacitacion(request):
     lista = retornaDataUsuarioCliente(request.session['S'])
     data = lista[0]['id_cliente'] 
-    print(data)
     ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
     return render(request,'core/vistaCliente/solicitarCapacitacion.html',ClienteEmpresa)
 
@@ -183,7 +196,19 @@ def addAsistente(request):
         apem   =   request.POST.get('amEmpleado')
         comunas   =   request.POST.get('genero')
         genero   =   request.POST.get('comunas')
-        print(rut,nombre,apep,apem,comunas,genero,IDCLIENTE)
-        cursor.callproc("SPD_INSERTAREMPLEADO",(rut, nombre, apep, apem, comunas, genero, IDCLIENTE))
-        
+        cursor.callproc("SPD_INSERTAREMPLEADO",(rut, nombre, apep, apem, comunas, genero, IDCLIENTE))  
+
+
+    #############################################################################
+    if request.method == 'POST' and 'modificarEmpleado' in request.POST:
+        IDEMPLEADO = request.POST.get('IDEMPLEADO')
+        nombreEmpleado = request.POST.get('nombreEmpleado')
+        apEmpleado    = request.POST.get('apEmpleado')
+        amEmpleado     = request.POST.get('amEmpleado')
+        rutEmpleado      = request.POST.get('rutEmpleado')
+        genero       = request.POST.get('genero')
+        comunas        = request.POST.get('comunasId')
+        cursor.callproc("SPD_MODIFICAREMPLEADO",(IDEMPLEADO,nombreEmpleado,apEmpleado,amEmpleado,rutEmpleado,genero,comunas))  
+        return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)
+
     return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)

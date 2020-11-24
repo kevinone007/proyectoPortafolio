@@ -46,6 +46,7 @@
         <tr>
             <th scope="col">Actividad</th>
             <th scope="col">Fecha</th>
+            <th scope="col">Hora</th>
             <th scope="col">Profesional</th>
             <th scope="col">Estado</th>
         </tr>
@@ -54,7 +55,8 @@
         {% for x in actividad %}
         <tr>
             <td>{{x.NOMBRE}}</td>
-            <td>{{x.FECHA}}</td>
+            <td>{{x.FECHALIMPIA}}</td>
+            <td>{{x.HORA}}</td>
             <td>{{x.PROFESIONAL}}</td>
             <td>{{x.DESCRIPCION}}</td>
         </tr>

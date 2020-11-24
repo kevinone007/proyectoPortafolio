@@ -78,7 +78,7 @@
             </select>
         </div>
         <div class="d-flex justify-content-center mt-3">
-            <button class="btn btnColor btn-block" id="btnInsertar" name="btnInsertar" type="submit">
+            <button class="btn btnColor btn-block" id="btnInsertar" name="btnInsertar" type="submit" onclick="Recarga()">
                 Ingresar Empleado
             </button>
         </div>
@@ -107,9 +107,11 @@
             <td>{{x.NOMBRE}} {{x.AP}} {{x.AM}}</td>
             <td>{{x.GENERO}}</td>
             <td>{{x.COMUNA}}</td>
-            <td><a class="btn btnColor btn-block" id="btnModi" data-toggle="modal" data-target="#modificarEmpleado{{x.ID}}" onclick="GetRegiones({{x.ID}});" name="btnModi">Modificar</a></td>
+            <td>
+                <a class="btn btnColor btn-block" id="btnModi" data-toggle="modal" data-target="#modificarEmpleado{{x.ID}}" onclick="GetRegiones({{x.ID}});" name="btnModi">Modificar</a>
+            </td>
             <!-- Modal Solicitar Visita -->
-            <div class="modal fade" id="modificarEmpleado{{x.ID}}" data-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modificarEmpleado{{x.ID}}" data-backdrop="static" data-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -118,6 +120,7 @@
                         <form method="POST" class="ml-3 mr-3 mb-3 mt-3">
                             {% csrf_token %}
                             <h3>Datos empleado</h3>
+                            <input id="IDEMPLEADO" name="IDEMPLEADO" hidden value="{{x.ID}}">
                             <div class="row p-2">
                                 <div class="form-group col-4">
                                     <label>Nombre</label>
@@ -145,19 +148,19 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Regi&oacute;n</label>
-                                    <select class="form-control" id="regiones{{x.ID}}" onchange="change({{x.ID}})" name="regiones1" required>
+                                    <select class="form-control" id="regiones{{x.ID}}" onchange="ComunasById({{x.ID}}); " name="regiones1" required>
                     <option value="" hidden>Seleccione Region</option>
                 </select>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Comuna</label>
-                                    <select class="form-control" id="comunas{{x.ID}}" name="comunas" required>
+                                    <select class="form-control" id="comunas{{x.ID}}" name="comunasId" required>
                     <option value="" selected>Seleccione Comuna</option>
                 </select>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn bntColor text text-dark border btn-outline-danger" data-dismiss="modal">Cerrar</button>
-                                    <button class="btn btnColor" id="btnRealizarSolicitud" name="btnRealizarSolicitud" type="submit">Realizar Solicitud</button>
+                                    <button type="button" class="btn bntColor text text-dark border btn-outline-danger" onclick="deleteRegionesById({{x.ID}});" data-dismiss="modal">Cerrar</button>
+                                    <button class="btn btnColor" id="modificarEmpleado{{x.ID}}" name="modificarEmpleado" type="submit" onclick="recarga()">Realizar Solicitud</button>
                                 </div>
                             </div>
                         </form>

@@ -5,7 +5,7 @@
 <br>
 <div class="row">
     <div class="col container border border-black">
-        <form method="POST" class="ml-3 mr-3 mb-3 mt-3">
+        <form method="POST" class="ml-3 mr-3 mb-3 mt-3" onsubmit="return validacion()">
             {% csrf_token %}
             <h3>Datos empresa</h3>
             <div class="row p-2 container">
@@ -25,30 +25,30 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label>Celular</label>
-                    <input type="number" class="form-control" name="unit" id="unit" placeholder="Celular Empresa" value="{{x.TELEFONO}}">
+                    <input type="text" class="form-control" name="celulari" id="celulari" placeholder="Celular Empresa" value="{{x.TELEFONO}}">
                 </div>
                 <div class="form-group col-md-6">
-                    <label>Region</label>
-                    <select class="form-control" id="regiones" name="regiones" required>
-                        <option value="" selected hidden>Seleccione Region</option>
+                    <label>Regi&oacute;n</label>
+                    <select class="form-control" id="regiones" name="regiones">
+                        <option value="" selected hidden>Seleccione Regi&oacute;n</option>
                     </select>
                 </div>
                 <div class="form-group col-md-6">
                     <label>Comuna</label>
-                    <select class="form-control" id="comunas" name="comunas" required>
+                    <select class="form-control" id="comunas" name="comunas">
                         <option value="" selected>Seleccione Comuna</option>
                     </select>
                 </div>
                 <div class="form-group col-md-12">
-                    <label>Correo Electronico</label>
-                    <input type="text" class="form-control" name="correo" id="correo" placeholder="Correo Electronico" value="{{x.MAIL_EMPRESA}}">
+                    <label>Correo Electrónico</label>
+                    <input type="text" class="form-control" name="correo" id="correo" placeholder="Correo Electrónico" value="{{x.MAIL_EMPRESA}}">
                 </div>
 
             </div>
             {% endfor %}
             <div class="d-flex justify-content-center mt-3">
                 <button class="btn btnColor btn-block" type="submit">
-                    Realizar Modificacion
+                    Realizar Modificación
                 </button>
             </div>
         </form>
@@ -59,25 +59,92 @@
 
 
 <script>
-    const onlyNumbers = (input) => {
-        $(`#${input}`).keypress(function(event) {
-            let large = $(`#${input}`).val().length;
-            if (event.which !== 8 && event.which !== 0 && event.which < 48 || event.which > 57) {
-                if (/\D/g.test(this.value)) {
-                    this.value = this.value.replace(/\D/g, '');
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Oops...',
-                        text: 'Solo se permiten números',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            }
-        });
-    }
+    function validacion() {
+        /* ---------------------------------------------------------- */
+        nombreEmpresa = document.getElementById("nombreEmpresa").value;
 
-    onlyNumbers('unit');
+        if (nombreEmpresa == null || nombreEmpresa.length == 0 || /^\s+$/.test(nombreEmpresa) || nombreEmpresa.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Nombre no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        rutCompleto = $('#rutEmpresa').val();
+
+        if (!rutValid(rutCompleto)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Rut debe tener formato 12345678-K',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        direccion = document.getElementById("direccion").value;
+
+        if (direccion == null || direccion.length == 0 || /^\s+$/.test(direccion) || direccion.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Dirección no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        telefono = document.getElementById("celulari").value;
+
+        if (telefono == null || telefono.length == 0 || /^[0-9]\d$/.test(telefono) || telefono.length > 11 || telefono.length < 8) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Teléfono no puede estar vacío y tener 9 caracteres',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        correo = document.getElementById("correo").value;
+
+        if (correo == null || correo.length == 0 || /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(correo) || correo.length > 80) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Dirección de correo electrónico no puede estar vacío ni superar los 80 caracteres.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        comunas = document.getElementById("comunas").value;
+
+        if (comunas == null || comunas.length == 0 || /^[0-9]\d$/.test(comunas) || comunas.length > 12) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Comuna no puede estar vacía.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+
+    };
 </script>
 {% endblock contenidoCliente %}

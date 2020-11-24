@@ -98,7 +98,6 @@ class Capacitacion(APIView):
         fecha = data['fecha'] 
         idUSER = data['idUSER'] 
         idActividad = data['idActividad']
-        print(f'{fecha} {idUSER} {idActividad}')
         cursor.callproc('SPD_CAPACITACION',[fecha,idUSER,idActividad])
         return HttpResponse('application/javascript')
 
