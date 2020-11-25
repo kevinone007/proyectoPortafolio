@@ -1,5 +1,4 @@
 from django.urls import path , include
-from django.contrib import admin
 from .views import home, login, registro, inicioCliente, modificarDatos, mataSesion,solicitarCapacitacion, addAsistente
 from .API import Login, Comunas, Regiones, Rubros, Servicios, Asistentes, Capacitacion, InsertActividadCapacitacion, ACTIVIDADID
 

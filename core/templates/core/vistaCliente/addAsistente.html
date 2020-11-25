@@ -108,7 +108,7 @@
             <td>{{x.GENERO}}</td>
             <td>{{x.COMUNA}}</td>
             <td>
-                <a class="btn btnColor btn-block" id="btnModi" data-toggle="modal" data-target="#modificarEmpleado{{x.ID}}" onclick="GetRegiones({{x.ID}});" name="btnModi">Modificar</a>
+                <a class="btn btnColor btn-block" id="btnModi" data-toggle="modal" data-target="#modificarEmpleado{{x.ID}}" onclick="GetRegiones(`{{x.ID}}`);" name="btnModi">Modificar</a>
             </td>
             <!-- Modal Solicitar Visita -->
             <div class="modal fade" id="modificarEmpleado{{x.ID}}" data-backdrop="static" data-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -148,7 +148,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Regi&oacute;n</label>
-                                    <select class="form-control" id="regiones{{x.ID}}" onchange="ComunasById({{x.ID}}); " name="regiones1" required>
+                                    <select class="form-control" id="regiones{{x.ID}}" onchange="ComunasById(`{{x.ID}}`); " name="regiones1" required>
                     <option value="" hidden>Seleccione Region</option>
                 </select>
                                 </div>
@@ -159,7 +159,7 @@
                 </select>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn bntColor text text-dark border btn-outline-danger" onclick="deleteRegionesById({{x.ID}});" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn bntColor text text-dark border btn-outline-danger" onclick="deleteRegionesById(`{{x.ID}}`);" data-dismiss="modal">Cerrar</button>
                                     <button class="btn btnColor" id="modificarEmpleado{{x.ID}}" name="modificarEmpleado" type="submit" onclick="recarga()">Realizar Solicitud</button>
                                 </div>
                             </div>

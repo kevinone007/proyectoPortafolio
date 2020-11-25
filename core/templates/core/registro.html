@@ -5,26 +5,26 @@
 
 <div class="row">
     <div class="col border border-black">
-        <form method="POST" class="ml-3 mr-3 mb-3 mt-3">
+        <form method="POST" class="ml-3 mr-3 mb-3 mt-3" onsubmit="return validacion()">
             {% csrf_token %}
             <h3>Datos empresa</h3>
             <div class="row p-2">
                 <div class="form-group col-8">
                     <label>Nombre Empresa</label>
-                    <input type="text" class="form-control" name="nombreEmpresa" placeholder="Nombre Empresa" required>
+                    <input type="text" class="form-control" name="nombreEmpresa" id="nombreEmpresa" placeholder="Nombre Empresa">
                 </div>
                 <div class="form-group col-4">
-                    <label for="inputRegistro">RUT Empresa</label>
-                    <input type="text" class="form-control" name="rutEmpresa" id="rutEmpresa" placeholder="RUT Empresa" required>
+                    <label>RUT Empresa</label>
+                    <input type="text" class="form-control" name="rutEmpresa" id="rutEmpresa" placeholder="RUT Empresa">
                 </div>
 
                 <div class="form-group col-md-8">
                     <label>Direccion</label>
-                    <input type="text" class="form-control" name="direccion" placeholder="Direccion Empresa" required>
+                    <input type="text" class="form-control" name="direccion" id="direccion" placeholder="Direccion Empresa">
                 </div>
                 <div class="form-group col-md-4">
                     <label>Celular</label>
-                    <input type="text" class="form-control" name="telefono" placeholder="Celular Empresa">
+                    <input type="text" class="form-control" name="telefono" id="telefono" placeholder="Celular Empresa">
                 </div>
                 <div class="form-group col-md-6">
                     <label>Region</label>
@@ -45,7 +45,7 @@
                 <div class="form-group col-md-6">
                     <label>Rubro Empresa</label>
                     <select class="form-control" id="rubros" name="rubros">
-                        <option value="0" selected>Seleccione Rubro</option>
+                        <option value="" selected>Seleccione Rubro</option>
                     </select> </div>
             </div>
             <div class="d-flex justify-content-center mt-3">
@@ -61,6 +61,110 @@
         </form>
     </div>
 </div>
+<script src="{% static 'core/js/jquery.min.js'%}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    function validacion() {
+        /* ---------------------------------------------------------- */
+        nombreEmpresa = document.getElementById("nombreEmpresa").value;
 
+        if (nombreEmpresa == null || nombreEmpresa.length == 0 || /^\s+$/.test(nombreEmpresa) || nombreEmpresa.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Nombre no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        rutCompleto = $('#rutEmpresa').val();
+
+        if (!rutValid(rutCompleto)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Rut debe tener formato 12345678-K',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        direccion = document.getElementById("direccion").value;
+
+        if (direccion == null || direccion.length == 0 || /^\s+$/.test(direccion) || direccion.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Dirección no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        telefono = document.getElementById("telefono").value;
+
+        if (telefono == null || telefono.length == 0 || /^[0-9]\d$/.test(telefono) || telefono.length > 11 || telefono.length < 8) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Teléfono no puede estar vacío y tener 9 caracteres',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        correo = document.getElementById("correo").value;
+
+        if (correo == null || correo.length == 0 || /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(correo) || correo.length > 80) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Dirección de correo electrónico no puede estar vacío ni superar los 80 caracteres.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        comunas = document.getElementById("comunas").value;
+
+        if (comunas == null || comunas.length == 0 || /^[0-9]\d$/.test(comunas) || comunas.length > 12) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Comuna no puede estar vacía.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        rubros = document.getElementById("rubros").value;
+
+        if (rubros == null || rubros.length == 0 || /^[0-9]\d$/.test(rubros) || rubros.length > 12) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Rubro no puede estar vacío.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+
+    };
+</script>
 
 {% endblock contenido %}

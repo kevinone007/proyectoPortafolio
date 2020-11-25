@@ -5,11 +5,9 @@ import json
 from django.db import connection
 from django.core.cache import cache
 
-# Create your views here.
 
 django_cursor = connection.cursor()
 cursor = django_cursor.connection.cursor()
-
 
 def home(request):
     return render(request,'core/home.html', {'nbar': 'home'})
@@ -87,7 +85,7 @@ def mataSesion(request):
         return redirect(login)
 
 def inicioCliente(request):
-    if 'S' in request.session:
+    if   'S' in request.session:
         print('Usuario loggeado')
     else:
         return redirect(login)
