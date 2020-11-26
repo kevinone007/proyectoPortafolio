@@ -37,48 +37,48 @@
     }
 </style>
 <h2 class="text text-center">Agregue empleados a sus registros</h2>
-<form method="POST" class="ml-3 mr-3 mb-3 mt-3">
+<form method="POST" class="ml-3 mr-3 mb-3 mt-3" onsubmit="return validacionAddAsistente()">
     {% csrf_token %}
     <h3>Datos empleado</h3>
     <div class="row p-2">
         <div class="form-group col-4">
             <label>Nombre</label>
-            <input type="text" class="form-control" id="nombreEmpleado" name="nombreEmpleado" placeholder="Nombre" required>
+            <input type="text" class="form-control" id="nombreEmpleado" name="nombreEmpleado" placeholder="Nombre">
         </div>
         <div class="form-group col-4">
             <label>Apellido Parterno</label>
-            <input type="text" class="form-control" id="apEmpleado" name="apEmpleado" placeholder="Apellido Parterno" required>
+            <input type="text" class="form-control" id="apEmpleado" name="apEmpleado" placeholder="Apellido Parterno">
         </div>
         <div class="form-group col-4">
             <label>Apellido Materno</label>
-            <input type="text" class="form-control" id="amEmpleado" name="amEmpleado" placeholder="Apellido Materno" required>
+            <input type="text" class="form-control" id="amEmpleado" name="amEmpleado" placeholder="Apellido Materno">
         </div>
         <div class="form-group col-2">
             <label>Rut</label>
-            <input type="text" class="form-control" id="rutEmpleado" name="rutEmpleado" placeholder="Rut" required>
+            <input type="text" class="form-control" id="rutEmpleado" name="rutEmpleado" placeholder="Rut">
         </div>
         <div class="form-group col-md-2">
             <label>G&eacute;nero</label>
-            <select class="form-control" id="genero" name="genero" required>
-                <option value="0">Seleccione G&eacute;nero</option>
+            <select class="form-control" id="genero" name="genero">
+                <option value="">Seleccione G&eacute;nero</option>
                 <option value="1">Masculino</option>
                 <option value="2" >Femenino</option>
             </select>
         </div>
         <div class="form-group col-md-4">
             <label>Regi&oacute;n</label>
-            <select class="form-control" id="regiones" name="regiones" required>
+            <select class="form-control" id="regiones" name="regiones">
                 <option value="" selected hidden>Seleccione Regi&oacute;n</option>
             </select>
         </div>
         <div class="form-group col-md-4">
             <label>Comuna</label>
-            <select class="form-control" id="comunas" name="comunas" required>
+            <select class="form-control" id="comunas" name="comunas">
                 <option value="" selected>Seleccione Comuna</option>
             </select>
         </div>
         <div class="d-flex justify-content-center mt-3">
-            <button class="btn btnColor btn-block" id="btnInsertar" name="btnInsertar" type="submit" onclick="Recarga()">
+            <button class="btn btnColor btn-block" id="btnInsertar" name="btnInsertar" type="submit">
                 Ingresar Empleado
             </button>
         </div>
@@ -110,7 +110,6 @@
             <td>
                 <a class="btn btnColor btn-block" id="btnModi" data-toggle="modal" data-target="#modificarEmpleado{{x.ID}}" onclick="GetRegiones(`{{x.ID}}`);" name="btnModi">Modificar</a>
             </td>
-            <!-- Modal Solicitar Visita -->
             <div class="modal fade" id="modificarEmpleado{{x.ID}}" data-backdrop="static" data-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
@@ -124,23 +123,23 @@
                             <div class="row p-2">
                                 <div class="form-group col-4">
                                     <label>Nombre</label>
-                                    <input type="text" class="form-control" id="nombreEmpleado" name="nombreEmpleado" value="{{x.NOMBRE}}" placeholder="Nombre" required>
+                                    <input type="text" class="form-control" id="nombreEmpleado1" name="nombreEmpleado1" value="{{x.NOMBRE}}" placeholder="Nombre">
                                 </div>
                                 <div class="form-group col-4">
                                     <label>Apellido Parterno</label>
-                                    <input type="text" class="form-control" id="apEmpleado" name="apEmpleado" value="{{x.AP}}" placeholder="Apellido Parterno" required>
+                                    <input type="text" class="form-control" id="apEmpleado1" name="apEmpleado1" value="{{x.AP}}" placeholder="Apellido Parterno">
                                 </div>
                                 <div class="form-group col-4">
                                     <label>Apellido Materno</label>
-                                    <input type="text" class="form-control" id="amEmpleado" name="amEmpleado" value="{{x.AM}}" placeholder="Apellido Materno" required>
+                                    <input type="text" class="form-control" id="amEmpleado1" name="amEmpleado1" value="{{x.AM}}" placeholder="Apellido Materno">
                                 </div>
                                 <div class="form-group col-2">
                                     <label>Rut</label>
-                                    <input type="text" class="form-control" id="rutEmpleado" name="rutEmpleado" placeholder="Rut" value="{{x.RUT}}" required>
+                                    <input type="text" class="form-control" id="rutEmpleado1" name="rutEmpleado1" placeholder="Rut" value="{{x.RUT}}">
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>G&eacute;nero</label>
-                                    <select class="form-control" id="genero" name="genero" required>
+                                    <select class="form-control" id="genero1" name="genero1">
                     <option value="0">Seleccione G&eacute;nero</option>
                     <option value="1">Masculino</option>
                     <option value="2" >Femenino</option>
@@ -148,13 +147,13 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Regi&oacute;n</label>
-                                    <select class="form-control" id="regiones{{x.ID}}" onchange="ComunasById(`{{x.ID}}`); " name="regiones1" required>
+                                    <select class="form-control" id="regiones{{x.ID}}" onchange="ComunasById(`{{x.ID}}`); " name="regiones1">
                     <option value="" hidden>Seleccione Region</option>
                 </select>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Comuna</label>
-                                    <select class="form-control" id="comunas{{x.ID}}" name="comunasId" required>
+                                    <select class="form-control" id="comunas{{x.ID}}" name="comunasId">
                     <option value="" selected>Seleccione Comuna</option>
                 </select>
                                 </div>
@@ -178,5 +177,126 @@
     </ul>
 </nav>
 
+<script src="{% static 'core/js/jquery.min.js'%}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    function validacionAddAsistente() {
+        /* ---------------------------------------------------------- */
+        nombreEmpleado = document.getElementById("nombreEmpleado").value;
+
+        if (nombreEmpleado == null || nombreEmpleado.length == 0 || /^\s+$/.test(nombreEmpleado) || nombreEmpleado.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Nombre no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+        /* ------------------------------------------------------------ */
+        apEmpleado = document.getElementById("apEmpleado").value;
+
+        if (apEmpleado == null || apEmpleado.length == 0 || /^\s+$/.test(apEmpleado) || apEmpleado.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Apellido Paterno no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+        /* ------------------------------------------------------------ */
+        amEmpleado = document.getElementById("amEmpleado").value;
+
+        if (amEmpleado == null || amEmpleado.length == 0 || /^\s+$/.test(apEmpleado) || amEmpleado.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Apellido Materno no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+        /* ------------------------------------------------------------ */
+        rutEmpleado = $('#rutEmpleado').val();
+        if (!rutValid(rutEmpleado)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Rut debe tener formato 12345678-K',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        const validaRutAsistente = (id) => {
+            var cero = 0;
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "GET",
+                url: `http://127.0.0.1:8000/API/RUTASISTENTE/${id}`,
+                dataType: 'json',
+                async: false,
+                success: function(res) {
+                    var resultado = parseInt(res[0].RESULTADO);
+                    if (resultado > 0) {
+                        cero = 1;
+                    } else {
+                        cero = 0;
+                    }
+                },
+                error: function(err) {
+                    alert('error');
+                }
+            });
+            return cero;
+        };
+        var rs = validaRutAsistente(rutEmpleado);
+        if (rs == 1) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Rut ya registrado',
+                text: `El rut ${rutEmpleado} ya se encuentra registrado en el sistema.`,
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ------------------------------------------------------------ */
+        comunas = document.getElementById("comunas").value;
+
+        if (comunas == null || comunas.length == 0 || /^[0-9]\d$/.test(comunas) || comunas.length > 12) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Comuna no puede estar vacía.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+        /* ------------------------------------------------------------ */
+        genero = document.getElementById("genero").value;
+
+        if (genero == null || genero.length == 0 || /^[0-9]\d$/.test(genero) || genero.length > 12) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Genero no puede estar vacío.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+    };
+</script>
 
 {% endif %} {% endblock contenidoCliente %}

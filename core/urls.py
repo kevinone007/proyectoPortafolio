@@ -1,6 +1,6 @@
 from django.urls import path , include
 from .views import home, login, registro, inicioCliente, modificarDatos, mataSesion,solicitarCapacitacion, addAsistente
-from .API import Login, Comunas, Regiones, Rubros, Servicios, Asistentes, Capacitacion, InsertActividadCapacitacion, ACTIVIDADID
+from .API import Login, Comunas, Regiones, Rubros, Servicios, Asistentes, Capacitacion, InsertActividadCapacitacion, ACTIVIDADID, RUTASISTENTE
 
 urlpatterns = [
     path('', home, name='home'),
@@ -9,6 +9,7 @@ urlpatterns = [
     path('API/Login/', Login.as_view()),
     path('API/Regiones/', Regiones.as_view()),
     path('API/Comunas/<pk>', Comunas.as_view()),
+    path('API/RUTASISTENTE/<rutsito>', RUTASISTENTE.as_view()),
     path('API/Capacitacion/', Capacitacion.as_view()),
     path('API/ACTIVIDADID/<idEmpresa>', ACTIVIDADID.as_view()),
     path('API/InsertActividadCapacitacion/', InsertActividadCapacitacion.as_view()),

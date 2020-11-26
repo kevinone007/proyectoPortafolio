@@ -41,7 +41,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <a class="nav-link btn btnColor ml-2" {% ifequal request.path '/inicioCliente' %} style="display:none" {% endifequal %} href="{% url 'inicioCliente' %}">Inicio</a>
             <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#solicitarVisita">Solicitar Visita</a>
-            <a class="nav-link btn btnColor ml-2" data-toggle="modal" href="{% url 'solicitarCapacitacion' %}">Solicitar Capacitacion</a>
+            <a class="nav-link btn btnColor ml-2" data-toggle="modal" href="{% url 'solicitarCapacitacion' %}">Solicitar Capacitaci&oacute;n</a>
             <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#solicitarAsesoria">Solicitar Asesoria</a>
             <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#modificarChecklist">Modificar CheckList</a>
             <a class="nav-link btn btnColor ml-2" href="{% url 'modificarDatos' %}">Modificar Datos</a>
@@ -60,7 +60,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Solicitar Visita en Terreno</h5>
                     </div>
-                    <form method="POST" onsubmit="return validacionInicio()">
+                    <form method="POST" onsubmit="return validacionVisita()">
                         {% csrf_token %}
                         <div class="modal-body">
                             <label>Fecha de Visita</label>
@@ -85,12 +85,12 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Solicitar Asesoria</h5>
                     </div>
-                    <form method="POST" action="">
+                    <form method="POST" onsubmit="return validacionAsesoria()">
                         {% csrf_token %}
                         <div class="modal-body">
                             <label>Motivo Asesoria</label>
                             <select class="form-control" id="servicios" name="servicios">
-                                <option value="0" selected>Seleccione Servicio</option>
+                                <option value="" selected>Seleccione Servicio</option>
                             </select>
                             <label>Fecha de Asesoria</label>
                             <input type="date" name="fechaAsesoria" id="fechaAsesoria">
@@ -112,19 +112,19 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Modificacion de Checklist</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Modificaci&oacute;n de Checklist</h5>
                     </div>
-                    <form method="POST" action="">
+                    <form method="POST" onsubmit="return validacionCheckList()">
                         {% csrf_token %}
                         <div class="modal-body">
-                            <label>Fecha de Modificacion</label>
+                            <label>Fecha de Modificaci&oacute;n</label>
                             <input type="date" name="fechaModificacion" id="fechaModificacion">
-                            <label>Hora de Modificacion</label>
+                            <label>Hora de Modificaci&oacute;n</label>
                             <input type="time" name="horaModificacion" id="horaModificacion">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn bntColor text text-dark border btn-outline-danger" data-dismiss="modal">Cerrar</button>
-                            <button class="btn btnColor" id="btnRealizarModificacion" name="btnRealizarModificacion" type="submit">Realizar Modificacion</button>
+                            <button class="btn btnColor" id="btnRealizarModificacion" name="btnRealizarModificacion" type="submit">Realizar Modificaci&oacute;n</button>
                         </div>
                     </form>
                 </div>
@@ -144,10 +144,20 @@
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+{% if messages %} {% for m in messages %}
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: '{{m}}',
+        showConfirmButton: false,
+        timer: 1500
+    });
+</script>
+{% endfor %} {% endif %}
 
 <script>
-    function validacionInicio() {
+    function validacionVisita() {
         /* ---------------------------------------------------------- */
         fechaVisita = document.getElementById("fechaVisita").value;
         var x = new Date();
@@ -199,7 +209,140 @@
             });
             return false;
         }
+    }
 
+
+    /* ------------------------------------------------------------------------------------------------------------------------------------ */
+
+    function validacionAsesoria() {
+
+        /* ---------------------------------------------------------- */
+
+
+        servicios = document.getElementById("servicios").value;
+
+        if (servicios == null || servicios.length == 0 || /^[0-9]\d$/.test(servicios) || servicios.length > 12) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Servicios no puede estar vacía.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        fechaAsesoria = document.getElementById("fechaAsesoria").value;
+        var x = new Date();
+        diaActual = x.getDate();
+        diaBuscado = diaActual + 1
+        x.setDate(diaBuscado)
+        x = x.toISOString().slice(0, 10);
+
+        if (fechaAsesoria == null || fechaAsesoria.length == 0 || /^\s+$/.test(fechaAsesoria) || fechaAsesoria.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Fecha de asesoria no puede estar vacío',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        } else if (x > fechaAsesoria) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Fecha de asesoria debe ser en 1 dia más al actual',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        horaAsesoria = document.getElementById("horaAsesoria").value;
+        horaAsesoria1 = horaAsesoria.toString().substr(0, 2)
+        horaAsesoria1 = parseInt(horaAsesoria1);
+        if (horaAsesoria == null || horaAsesoria.length == 0 || /^\s+$/.test(horaAsesoria) || horaAsesoria.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Hora de asesoria no puede estar vacío',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        } else if (horaAsesoria1 <= 07 || horaAsesoria1 >= 19) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Hora de asesoria debe ser entre las 8:00 y las 18:00',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+    }
+
+
+    /* ------------------------------------------------------------------------------------------------------------------------------------ */
+
+
+    function validacionCheckList() {
+
+
+        /* ---------------------------------------------------------- */
+        fechaModificacion = document.getElementById("fechaModificacion").value;
+        var x = new Date();
+        diaActual = x.getDate();
+        diaBuscado = diaActual + 1
+        x.setDate(diaBuscado)
+        x = x.toISOString().slice(0, 10);
+
+        if (fechaModificacion == null || fechaModificacion.length == 0 || /^\s+$/.test(fechaModificacion) || fechaModificacion.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Fecha de Modificación no puede estar vacío',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        } else if (x > fechaModificacion) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Fecha de Modificación debe ser en 1 dia más al actual',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
+
+        /* ---------------------------------------------------------- */
+        horaModificacion = document.getElementById("horaModificacion").value;
+        horaModificacion1 = horaModificacion.toString().substr(0, 2)
+        horaModificacion1 = parseInt(horaModificacion1);
+        if (horaModificacion == null || horaModificacion.length == 0 || /^\s+$/.test(horaModificacion) || horaModificacion.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Hora de Modificación no puede estar vacío',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        } else if (horaModificacion1 <= 07 || horaModificacion1 >= 19) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Hora de Modificación debe ser entre las 8:00 y las 18:00',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return false;
+        }
     }
 </script>
 

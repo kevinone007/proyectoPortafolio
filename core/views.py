@@ -4,6 +4,7 @@ import requests
 import json
 from django.db import connection
 from django.core.cache import cache
+from django.contrib import messages 
 
 
 django_cursor = connection.cursor()
@@ -27,26 +28,22 @@ def login(request):
         res = requests.post(url, dataSet)
 
         dataGet = json.loads(res.text)
-
         if dataGet[0]['RES'] == 0:
-            data = {'msj': "Credenciales Erroneas"}
-            return render(request,'core/login.html', data)
-        else:
+            messages.success(request, "Credenciales erróneas")
+            return render(request,'core/login.html')
+        elif (dataGet[0]['id_rol'] == 1):             
+            messages.success(request, "Usted es administrador, debe iniciar sesion en el sistema de escritorio.")    
+        
+        elif (dataGet[0]['id_rol'] == 2):
             if(dataGet[0]['id_est_creden'] == 2):
-                data = {'msj': "Cuenta Bloqueada, contacte al administrador"}
-                return render(request,'core/login.html', data)
+                messages.success(request, "Cuenta Bloqueada, contacte al administrador")
+                return render(request,'core/login.html')
             else:
                 request.session["S"] = USER_CRED
-                
-                if(dataGet[0]['id_rol'] == 1):             
-                    data = {'msj': "Usted es administrador, debe iniciar sesion en el sistema de escritorio."}
-                    return render(request,'core/login.html', data)
-                
-                if(dataGet[0]['id_rol'] == 2):
-                    return redirect(inicioCliente)
-
-                if(dataGet[0]['id_rol'] == 3):
-                    print('WENA TIPO 3')   
+                messages.success(request, "Inicio de sesion exitoso")
+                return redirect(inicioCliente)
+        elif(dataGet[0]['id_rol'] == 3):
+            messages.success(request, "Usted es profesional, debe ingresar por Intranet.")
     return render(request,'core/login.html',  {'nbar': 'login'})
 
 def registro(request):
@@ -61,6 +58,7 @@ def registro(request):
         user          = rutEmpresa
         passwd        = rutEmpresa[0:4]
         cursor.callproc("SPD_ADDCLIENTEEMPRESA",(rutEmpresa, nombreEmpresa, telefono, correo, direccion,  comunas, rubros, user, passwd))
+        messages.success(request, "Solicitud ingresada correctamente.")
     return render(request,'core/registro.html',  {'nbar': 'registro'})
 
 def retornaDataUsuarioCliente(USER):
@@ -82,7 +80,8 @@ def dataClienteEmpresa(IDCLIENTE):
 def mataSesion(request):
     if 'S' in request.session:
         del request.session['S']
-        return redirect(login)
+        messages.success(request, "Sesión cerrada correctamente.")
+        return redirect(home)
 
 def inicioCliente(request):
     if   'S' in request.session:
@@ -129,7 +128,7 @@ def inicioCliente(request):
         minutoVisita = request.POST.get('horaVisita')
         minutoVisita = minutoVisita[3:5]
         cursor.callproc("SPD_INGRESARSOLICITUD",(fechaVisita, horaVisita, minutoVisita, IDCLIENTE))
-
+        messages.success(request, "Solicitud ingresada correctamente.")
 
     ###################SPD_INGRESARASESORIA############################
     if request.method == 'POST' and 'btnRealizarAsesoria' in request.POST:
@@ -141,7 +140,7 @@ def inicioCliente(request):
         minutoAsesoria = request.POST.get('horaAsesoria')
         minutoAsesoria = minutoAsesoria[3:5]
         cursor.callproc("SPD_INGRESARASESORIA",(fechaAsesoria, horaAsesoria, minutoAsesoria, IDCLIENTE, servicios))
-
+        messages.success(request, "Asesoria ingresada correctamente.")
     ####################SPD_INGRESARMODIFICACION###########################
     if request.method == 'POST' and 'btnRealizarModificacion' in request.POST:
         fechaModificacion  =   request.POST.get('fechaModificacion')
@@ -151,6 +150,7 @@ def inicioCliente(request):
         minutoVisita = request.POST.get('horaModificacion')
         minutoVisita = minutoVisita[3:5]
         cursor.callproc("SPD_INGRESARMODIFICACION",(fechaModificacion, horaModificacion, minutoVisita, IDCLIENTE))
+        messages.success(request, "Modificación solicitada correctamente.")
 
     return render(request,'core/vistaCliente/inicioCliente.html', data )
 
@@ -167,6 +167,7 @@ def modificarDatos(request):
         comunas       = request.POST.get('comunas')
         correo        = request.POST.get('correo')
         cursor.callproc("SPD_MODIFICARCLIENTE",(data, nombreEmpresa, rutEmpresa, direccion, telefono, comunas,correo))
+        messages.success(request, "Datos modificados correctamente.")
     return render(request, 'core/vistaCliente/modificarDatos.html', ClienteEmpresa)
 
 
@@ -194,6 +195,7 @@ def addAsistente(request):
         apem   =   request.POST.get('amEmpleado')
         comunas   =   request.POST.get('genero')
         genero   =   request.POST.get('comunas')
+        messages.success(request, "Empleado guardado correctamente.")
         cursor.callproc("SPD_INSERTAREMPLEADO",(rut, nombre, apep, apem, comunas, genero, IDCLIENTE))  
 
 
@@ -207,6 +209,7 @@ def addAsistente(request):
         genero       = request.POST.get('genero')
         comunas        = request.POST.get('comunasId')
         cursor.callproc("SPD_MODIFICAREMPLEADO",(IDEMPLEADO,nombreEmpleado,apEmpleado,amEmpleado,rutEmpleado,genero,comunas))  
+        messages.success(request, "Empleado modificado correctamente.")
         return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)
 
     return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)

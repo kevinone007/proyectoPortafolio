@@ -36,7 +36,15 @@
     </div>
 </div>
 
-
-<h1>{{msj}}</h1>
-
-{% endblock contenido %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+{% if messages %} {% for m in messages %}
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: '{{m}}',
+        showConfirmButton: false,
+        timer: 1500
+    });
+</script>
+{% endfor %} {% endif %} {% endblock contenido %}

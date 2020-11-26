@@ -59,24 +59,9 @@ const GetComunas = (id, ID_REGION) => {
     });
 
 };
-const ComunasById = (identificador) => {
-        $(`#comunas${identificador} option`).remove();
-        $.ajax({
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                    type: "GET",
-                    url: `http://127.0.0.1:8000/API/Comunas/${$(`#regiones${identificador} option:selected`).val()}`,
-        success: function(res) {
-            $.each(JSON.parse(res), function(i, x) {
-                $(`#comunas${identificador}`).append(`<option value="${x.ID_COMUNA}">${x.DESCRIPCION}</option>`);
-            });
-        },
-        error: function(err) {
-            alert('error');
-        }
-    });
-};
 
-const deleteRegionesById = (identity) =>{
+
+const deleteRegionesById = (identity) => {
     $(`#regiones${identity} option`).remove();
 };
 
@@ -373,4 +358,22 @@ const dvValid = (T) => {
     for (; T; T = Math.floor(T / 10))
         S = (S + (T % 10) * (9 - (M++ % 6))) % 11;
     return S ? S - 1 : "k";
+};
+
+
+const ComunasById = (identificador) => {
+        $(`#comunas${identificador} option`).remove();
+        $.ajax({
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    type: "GET",
+                    url: `http://127.0.0.1:8000/API/Comunas/${$(`#regiones${identificador} option:selected`).val()}`,
+    success: function(res) {
+        $.each(JSON.parse(res), function(i, x) {
+            $(`#comunas${identificador}`).append(`<option value="${x.ID_COMUNA}">${x.DESCRIPCION}</option>`);
+        });
+    },
+    error: function(err) {
+        alert('error');
+    }
+});
 };

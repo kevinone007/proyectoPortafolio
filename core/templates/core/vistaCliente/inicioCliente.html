@@ -68,5 +68,16 @@
         <a id="numbers"></a>
     </ul>
 </nav>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-{% endif %} {% endblock contenidoCliente %}
+{% if messages %} {% for m in messages %}
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: '{{m}}',
+        showConfirmButton: false,
+        timer: 1500
+    });
+</script>
+{% endfor %} {% endif %} {% endif %} {% endblock contenidoCliente %}
