@@ -116,7 +116,7 @@
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Modificar Empleado</h5>
                         </div>
-                        <form method="POST" class="ml-3 mr-3 mb-3 mt-3">
+                        <form method="POST" class="ml-3 mr-3 mb-3 mt-3" onsubmit="return validacionModAsistente();">
                             {% csrf_token %}
                             <h3>Datos empleado</h3>
                             <input id="IDEMPLEADO" name="IDEMPLEADO" hidden value="{{x.ID}}">
@@ -140,7 +140,7 @@
                                 <div class="form-group col-md-2">
                                     <label>G&eacute;nero</label>
                                     <select class="form-control" id="genero1" name="genero1">
-                    <option value="0">Seleccione G&eacute;nero</option>
+                    <option value="">Seleccione G&eacute;nero</option>
                     <option value="1">Masculino</option>
                     <option value="2" >Femenino</option>
                 </select>
@@ -153,7 +153,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Comuna</label>
-                                    <select class="form-control" id="comunas{{x.ID}}" name="comunasId">
+                                    <select class="form-control" id="comunas{{x.ID}}" name="comunasId1">
                     <option value="" selected>Seleccione Comuna</option>
                 </select>
                                 </div>
@@ -190,7 +190,7 @@
                 title: 'Oops...',
                 text: 'Nombre no puede estar vacío ni superar los 50 caracteres.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -203,7 +203,7 @@
                 title: 'Oops...',
                 text: 'Apellido Paterno no puede estar vacío ni superar los 50 caracteres.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -216,7 +216,7 @@
                 title: 'Oops...',
                 text: 'Apellido Materno no puede estar vacío ni superar los 50 caracteres.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -228,7 +228,7 @@
                 title: 'Oops...',
                 text: 'Rut debe tener formato 12345678-K',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -265,7 +265,7 @@
                 title: 'Rut ya registrado',
                 text: `El rut ${rutEmpleado} ya se encuentra registrado en el sistema.`,
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -279,7 +279,7 @@
                 title: 'Oops...',
                 text: 'Comuna no puede estar vacía.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -292,7 +292,90 @@
                 title: 'Oops...',
                 text: 'Genero no puede estar vacío.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
+            });
+            return false;
+        }
+    };
+    /* *************************************************************************************************************** */
+    function validacionModAsistente() {
+        /* ------------------------------------------------------------ */
+        idemp = document.getElementById("IDEMPLEADO").value;
+        /* ---------------------------------------------------------- */
+        nombreEmpleado1 = document.getElementById("nombreEmpleado1").value;
+
+        if (nombreEmpleado1 == null || nombreEmpleado1.length == 0 || /^\s+$/.test(nombreEmpleado1) || nombreEmpleado1.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Nombre no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+        /* ------------------------------------------------------------ */
+        apEmpleado1 = document.getElementById("apEmpleado1").value;
+
+        if (apEmpleado1 == null || apEmpleado1.length == 0 || /^\s+$/.test(apEmpleado1) || apEmpleado1.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Apellido Paterno no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+        /* ------------------------------------------------------------ */
+        amEmpleado1 = document.getElementById("amEmpleado1").value;
+
+        if (amEmpleado1 == null || amEmpleado1.length == 0 || /^\s+$/.test(amEmpleado1) || amEmpleado1.length > 50) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Apellido Materno no puede estar vacío ni superar los 50 caracteres.',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+        /* ------------------------------------------------------------ */
+        rutEmpleado1 = $('#rutEmpleado1').val();
+        if (!rutValid(rutEmpleado1)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Rut debe tener formato 12345678-K',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+        /* ------------------------------------------------------------ */
+
+        comunas1 = document.getElementById("comunas" + idemp).value;
+
+        if (comunas1 == null || comunas1.length == 0 || /^[0-9]\d$/.test(comunas1) || comunas1.length > 12) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Comuna no puede estar vacía.',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+        /* ------------------------------------------------------------ */
+        genero1 = document.getElementById("genero1").value;
+
+        if (genero1 == null || genero1.length == 0 || /^[0-9]\d$/.test(genero1) || genero1.length > 12) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Genero no puede estar vacío.',
+                showConfirmButton: false,
+                timer: 3000
             });
             return false;
         }

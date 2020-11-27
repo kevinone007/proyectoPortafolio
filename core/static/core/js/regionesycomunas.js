@@ -35,8 +35,8 @@ const GetRegiones = (id) => {
                 }
             });
         },
-        error: function(err) {
-            alert('error');
+        error: function(request, error) {
+            alert(error);
         }
     });
 };
@@ -53,8 +53,8 @@ const GetComunas = (id, ID_REGION) => {
 
             });
         },
-        error: function(err) {
-            alert('error');
+        error: function(request, error) {
+            alert(error);
         }
     });
 
@@ -75,8 +75,8 @@ const GetRubros = () => {
                 $('#rubros').append(`<option value="${x.COD_RUBRO}">${x.DESCRIPCION}</option>`);
             });
         },
-        error: function(err) {
-            alert('error');
+        error: function(request, error) {
+            alert(error);
         }
     });
 };
@@ -93,8 +93,8 @@ const GetServicios = () => {
             });
 
         },
-        error: function(err) {
-            alert('error');
+        error: function(request, error) {
+            alert(error);
         }
     });
 };
@@ -110,8 +110,8 @@ const GetAsistentes = () => {
             });
         },
 
-        error: function(err) {
-            alert('error');
+        error: function(request, error) {
+            alert(error);
         }
     });
 };
@@ -131,7 +131,7 @@ function validador() {
                 title: 'Oops...',
                 text: 'Ya agregado',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
         }
     });
@@ -153,11 +153,14 @@ const agregar = () => {
     lista.push(objeto);
     var fila = '';
     $.each((lista), function(i, x) {
-        fila += `<tr id="i${x.cod}">
-                    <td style="display:none" >${x.cod}</td>
-                    <td>${x.nombre}</td>
-                    <td><button onclick="eliminarFila('${x.cod}')" class="btn btnColor">Eliminar</button></td>
-                </tr>`;
+        algo = `${x.cod}`;
+        if (algo != '') {
+            fila += `<tr id="i${x.cod}">
+                        <td style="display:none" >${x.cod}</td>
+                        <td>${x.nombre}</td>
+                        <td><button onclick="eliminarFila('${x.cod}')" class="btn btnColor">Eliminar</button></td>
+                    </tr>`;
+        }
     });
     $('#listAsistentes').append(fila);
 };
@@ -188,39 +191,70 @@ const csrftoken = getCookie('csrftoken');
 $('#guardarCapa').click(function() {
     var fecha = $("#fechaCapacitacion").val();
     var idCliente = $("#idCliente").val();
+    var x = new Date();
+    diaActual = x.getDate();
+    diaBuscado = diaActual + 14;
+    x.setDate(diaBuscado);
+    x = x.toISOString().slice(0, 10);
+    if (fecha == null || fecha.length == 0 || /^\s+$/.test(fecha) || fecha.length > 50) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Fecha de capacitación no puede estar vacío',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        return false;
+    } else if (x > fecha) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Fecha de capacitación debe ser en 15 día más al actual',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        return false;
+    }
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
         type: "POST",
-        dataType: 'json',
+        dataType: 'text',
         data: JSON.stringify({ 'fecha': fecha, 'idCliente': idCliente }),
         url: `http://127.0.0.1:8000/API/InsertActividadCapacitacion/`,
-        error: function(err) {
-            alert('error');
+        error: function(request, error) {
+            alert(error);
         }
     });
 
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         type: "GET",
-        url: `http://127.0.0.1:8000/API/ACTIVIDADID/${idCliente}`,
         dataType: 'json',
+        url: `http://127.0.0.1:8000/API/ACTIVIDADID/${idCliente}`,
         success: function(res) {
             id = res[0].ID_ASISTENTE;
-            guardar(id);
-            Swal.fire({
-                icon: 'success',
-                title: 'Capacitacion solicitada',
-                text: `Su capacitacion ha sido ingresada correctamente. TOTAL ASISTENTES: ${id.length} FECHA: ${fecha}`,
-                showConfirmButton: true,
-                timer: 10000
-            }).then(
-
-                function() { window.location.replace('/solicitarCapacitacion'); }
-
-            );
+            if (guardar(id) == false) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Lista de usuarios no puede estar vacía.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Capacitación solicitada',
+                    text: `Su capacitación ha sido ingresada correctamente. FECHA: ${fecha}`,
+                    showConfirmButton: true,
+                    timer: 3000
+                }).then(
+                    function() { window.location.replace('/solicitarCapacitacion'); }
+                );
+            }
         },
-        error: function(err) {
-            alert('error');
+        error: function(request, error) {
+            alert(error);
         }
     });
 });
@@ -228,18 +262,25 @@ $('#guardarCapa').click(function() {
 const guardar = (id) => {
     $('#listAsistentes tr').each(function(i) {
         if (i > 0) {
-            var idUSER = $(this).find('td').eq(0).html();
+            var idUSER = null;
+            idUSER = $(this).find('td').eq(0).html();
             var fecha = $("#fechaCapacitacion").val();
-            $.ajax({
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
-                type: "POST",
-                dataType: 'json',
-                data: JSON.stringify({ fecha: fecha, idUSER: idUSER, idActividad: id }),
-                url: `http://127.0.0.1:8000/API/Capacitacion/`,
-                error: function(err) {
-                    alert('error');
-                }
-            });
+            alert(idUSER);
+            if (idUSER == null || idUSER.length == 0 || /^\s+$/.test(idUSER) || idUSER.length > 50) {
+                return false;
+            } else {
+                $.ajax({
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+                    type: "POST",
+                    dataType: 'text',
+                    async: false,
+                    data: JSON.stringify({ fecha: fecha, idUSER: idUSER, idActividad: id }),
+                    url: `http://127.0.0.1:8000/API/Capacitacion/`,
+                    error: function(request, error) {
+                        alert(error);
+                    }
+                });
+            }
 
         }
     });
@@ -372,8 +413,8 @@ const ComunasById = (identificador) => {
             $(`#comunas${identificador}`).append(`<option value="${x.ID_COMUNA}">${x.DESCRIPCION}</option>`);
         });
     },
-    error: function(err) {
-        alert('error');
+    error: function(request, error) {
+        alert(error);
     }
 });
 };

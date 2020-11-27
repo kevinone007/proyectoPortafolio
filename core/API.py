@@ -135,3 +135,15 @@ class RUTASISTENTE(APIView):
             lista.append({'RESULTADO':x[0]})
         res = json.dumps(lista)
         return HttpResponse(res, 'application/javascript')
+        
+class RUTEMPRESA(APIView):
+    def get(self, request, rutsito):
+        django_cursor = connection.cursor()
+        cursor = django_cursor.connection.cursor()
+        out_cur = django_cursor.connection.cursor()
+        cursor.callproc('SPD_RUTEMPRESA',[rutsito,out_cur])
+        lista = []
+        for x in out_cur:
+            lista.append({'RESULTADO':x[0]})
+        res = json.dumps(lista)
+        return HttpResponse(res, 'application/javascript')

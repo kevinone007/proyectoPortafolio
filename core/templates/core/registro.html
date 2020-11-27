@@ -70,7 +70,7 @@
         title: 'Éxito',
         text: '{{m}}',
         showConfirmButton: false,
-        timer: 1500
+        timer: 3000
     });
 </script>
 {% endfor %} {% endif %}
@@ -85,7 +85,7 @@
                 title: 'Oops...',
                 text: 'Nombre no puede estar vacío ni superar los 50 caracteres.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -99,11 +99,46 @@
                 title: 'Oops...',
                 text: 'Rut debe tener formato 12345678-K',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
-
+        const validaRutAsistente = (id) => {
+            var cero = 0;
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "GET",
+                url: `http://127.0.0.1:8000/API/RUTEMPRESA/${id}`,
+                dataType: 'json',
+                async: false,
+                success: function(res) {
+                    var resultado = parseInt(res[0].RESULTADO);
+                    if (resultado > 0) {
+                        cero = 1;
+                    } else {
+                        cero = 0;
+                    }
+                },
+                error: function(err) {
+                    alert('error');
+                }
+            });
+            return cero;
+        };
+        var rs = validaRutAsistente(rutCompleto);
+        if (rs == 1) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Rut ya registrado',
+                text: `El rut ${rutCompleto} ya se encuentra registrado en el sistema.`,
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
         /* ---------------------------------------------------------- */
         direccion = document.getElementById("direccion").value;
 
@@ -113,7 +148,7 @@
                 title: 'Oops...',
                 text: 'Dirección no puede estar vacío ni superar los 50 caracteres.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -127,7 +162,7 @@
                 title: 'Oops...',
                 text: 'Teléfono no puede estar vacío y tener 9 caracteres',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -141,7 +176,7 @@
                 title: 'Oops...',
                 text: 'Dirección de correo electrónico no puede estar vacío ni superar los 80 caracteres.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -155,7 +190,7 @@
                 title: 'Oops...',
                 text: 'Comuna no puede estar vacía.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -169,7 +204,7 @@
                 title: 'Oops...',
                 text: 'Rubro no puede estar vacío.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }

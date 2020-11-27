@@ -32,7 +32,7 @@ def login(request):
             messages.success(request, "Credenciales erróneas")
             return render(request,'core/login.html')
         elif (dataGet[0]['id_rol'] == 1):             
-            messages.success(request, "Usted es administrador, debe iniciar sesion en el sistema de escritorio.")    
+            messages.success(request, "Usted es administrador, debe iniciar sesión en el sistema de escritorio.")    
         
         elif (dataGet[0]['id_rol'] == 2):
             if(dataGet[0]['id_est_creden'] == 2):
@@ -40,7 +40,7 @@ def login(request):
                 return render(request,'core/login.html')
             else:
                 request.session["S"] = USER_CRED
-                messages.success(request, "Inicio de sesion exitoso")
+                messages.success(request, "Inicio de sesión exitoso")
                 return redirect(inicioCliente)
         elif(dataGet[0]['id_rol'] == 3):
             messages.success(request, "Usted es profesional, debe ingresar por Intranet.")
@@ -140,7 +140,7 @@ def inicioCliente(request):
         minutoAsesoria = request.POST.get('horaAsesoria')
         minutoAsesoria = minutoAsesoria[3:5]
         cursor.callproc("SPD_INGRESARASESORIA",(fechaAsesoria, horaAsesoria, minutoAsesoria, IDCLIENTE, servicios))
-        messages.success(request, "Asesoria ingresada correctamente.")
+        messages.success(request, "Asesoría ingresada correctamente.")
     ####################SPD_INGRESARMODIFICACION###########################
     if request.method == 'POST' and 'btnRealizarModificacion' in request.POST:
         fechaModificacion  =   request.POST.get('fechaModificacion')
@@ -202,12 +202,12 @@ def addAsistente(request):
     #############################################################################
     if request.method == 'POST' and 'modificarEmpleado' in request.POST:
         IDEMPLEADO = request.POST.get('IDEMPLEADO')
-        nombreEmpleado = request.POST.get('nombreEmpleado')
-        apEmpleado    = request.POST.get('apEmpleado')
-        amEmpleado     = request.POST.get('amEmpleado')
-        rutEmpleado      = request.POST.get('rutEmpleado')
-        genero       = request.POST.get('genero')
-        comunas        = request.POST.get('comunasId')
+        nombreEmpleado = request.POST.get('nombreEmpleado1')
+        apEmpleado    = request.POST.get('apEmpleado1')
+        amEmpleado     = request.POST.get('amEmpleado1')
+        rutEmpleado      = request.POST.get('rutEmpleado1')
+        genero       = request.POST.get('genero1')
+        comunas        = request.POST.get('comunasId1')
         cursor.callproc("SPD_MODIFICAREMPLEADO",(IDEMPLEADO,nombreEmpleado,apEmpleado,amEmpleado,rutEmpleado,genero,comunas))  
         messages.success(request, "Empleado modificado correctamente.")
         return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)

@@ -42,12 +42,12 @@
             <a class="nav-link btn btnColor ml-2" {% ifequal request.path '/inicioCliente' %} style="display:none" {% endifequal %} href="{% url 'inicioCliente' %}">Inicio</a>
             <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#solicitarVisita">Solicitar Visita</a>
             <a class="nav-link btn btnColor ml-2" data-toggle="modal" href="{% url 'solicitarCapacitacion' %}">Solicitar Capacitaci&oacute;n</a>
-            <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#solicitarAsesoria">Solicitar Asesoria</a>
+            <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#solicitarAsesoria">Solicitar Asesoría</a>
             <a class="nav-link btn btnColor ml-2" {% ifnotequal request.path '/inicioCliente' %} style="display:none" {% endifnotequal %} data-toggle="modal" data-target="#modificarChecklist">Modificar CheckList</a>
             <a class="nav-link btn btnColor ml-2" href="{% url 'modificarDatos' %}">Modificar Datos</a>
             <a class="nav-link btn btnColor ml-2" href="{% url 'addAsistente' %}">Mantenedor Empleados</a>
             <div class="navbar-nav ml-auto ">
-                <a class="nav-link float-right btn bntColor text text-dark border btn-outline-danger ml-2" type="submit" href="{% url 'mataSesion' %}" name="cerrar_session">Cerrar Sesion</a>
+                <a class="nav-link float-right btn bntColor text text-dark border btn-outline-danger ml-2" type="submit" href="{% url 'mataSesion' %}" name="cerrar_session">Cerrar Sesión</a>
             </div>
         </div>
     </nav>
@@ -88,13 +88,13 @@
                     <form method="POST" onsubmit="return validacionAsesoria()">
                         {% csrf_token %}
                         <div class="modal-body">
-                            <label>Motivo Asesoria</label>
+                            <label>Motivo Asesoría</label>
                             <select class="form-control" id="servicios" name="servicios">
                                 <option value="" selected>Seleccione Servicio</option>
                             </select>
-                            <label>Fecha de Asesoria</label>
+                            <label>Fecha de Asesoría</label>
                             <input type="date" name="fechaAsesoria" id="fechaAsesoria">
-                            <label>Hora de Asesoria</label>
+                            <label>Hora de Asesoría</label>
                             <input type="time" name="horaAsesoria" id="horaAsesoria">
                         </div>
                         <div class="modal-footer">
@@ -151,7 +151,7 @@
         title: 'Éxito',
         text: '{{m}}',
         showConfirmButton: false,
-        timer: 1500
+        timer: 3000
     });
 </script>
 {% endfor %} {% endif %}
@@ -172,16 +172,16 @@
                 title: 'Oops...',
                 text: 'Fecha de visita no puede estar vacío',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         } else if (x > fechaVisita) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Fecha de visita debe ser en 1 dia más al actual',
+                text: 'Fecha de visita debe ser en 1 día más al actual',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -196,7 +196,7 @@
                 title: 'Oops...',
                 text: 'Hora de visita no puede estar vacío',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         } else if (horaVisita1 <= 07 || horaVisita1 >= 19) {
@@ -205,7 +205,7 @@
                 title: 'Oops...',
                 text: 'Hora de visita debe ser entre las 8:00 y las 18:00',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -227,7 +227,7 @@
                 title: 'Oops...',
                 text: 'Servicios no puede estar vacía.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -244,18 +244,18 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Fecha de asesoria no puede estar vacío',
+                text: 'Fecha de asesoría no puede estar vacío',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         } else if (x > fechaAsesoria) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Fecha de asesoria debe ser en 1 dia más al actual',
+                text: 'Fecha de asesoría debe ser en 1 día más al actual',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -268,18 +268,18 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Hora de asesoria no puede estar vacío',
+                text: 'Hora de asesoría no puede estar vacío',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         } else if (horaAsesoria1 <= 07 || horaAsesoria1 >= 19) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Hora de asesoria debe ser entre las 8:00 y las 18:00',
+                text: 'Hora de asesoría debe ser entre las 8:00 y las 18:00',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -306,16 +306,16 @@
                 title: 'Oops...',
                 text: 'Fecha de Modificación no puede estar vacío',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         } else if (x > fechaModificacion) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Fecha de Modificación debe ser en 1 dia más al actual',
+                text: 'Fecha de Modificación debe ser en 1 día más al actual',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
@@ -330,7 +330,7 @@
                 title: 'Oops...',
                 text: 'Hora de Modificación no puede estar vacío',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         } else if (horaModificacion1 <= 07 || horaModificacion1 >= 19) {
@@ -339,7 +339,7 @@
                 title: 'Oops...',
                 text: 'Hora de Modificación debe ser entre las 8:00 y las 18:00',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
             });
             return false;
         }
