@@ -48,12 +48,12 @@ def login(request):
 
 def registro(request):
     if request.method == 'POST' :
-        nombreEmpresa = request.POST.get('nombreEmpresa')
-        rutEmpresa    = request.POST.get('rutEmpresa')
-        direccion     = request.POST.get('direccion')
+        nombreEmpresa = request.POST.get('nombreEmpresa').upper()
+        rutEmpresa    = request.POST.get('rutEmpresa').upper()
+        direccion     = request.POST.get('direccion').upper()
         telefono      = request.POST.get('telefono')
         comunas       = request.POST.get('comunas')
-        correo        = request.POST.get('correo')
+        correo        = request.POST.get('correo').upper()
         rubros        = request.POST.get('rubros')
         user          = rutEmpresa
         passwd        = rutEmpresa[0:4]
@@ -160,12 +160,12 @@ def modificarDatos(request):
     ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
 
     if request.method == 'POST' :
-        nombreEmpresa = request.POST.get('nombreEmpresa')
-        rutEmpresa    = request.POST.get('rutEmpresa')
-        direccion     = request.POST.get('direccion')
+        nombreEmpresa = request.POST.get('nombreEmpresa').upper()
+        rutEmpresa    = request.POST.get('rutEmpresa').upper()
+        direccion     = request.POST.get('direccion').upper()
         telefono      = request.POST.get('celulari')
         comunas       = request.POST.get('comunas')
-        correo        = request.POST.get('correo')
+        correo        = request.POST.get('correo').upper()
         cursor.callproc("SPD_MODIFICARCLIENTE",(data, nombreEmpresa, rutEmpresa, direccion, telefono, comunas,correo))
         messages.success(request, "Datos modificados correctamente.")
     return render(request, 'core/vistaCliente/modificarDatos.html', ClienteEmpresa)
@@ -189,10 +189,10 @@ def addAsistente(request):
 
     #############################################################################
     if request.method == 'POST' and 'btnInsertar' in request.POST:
-        rut  =   request.POST.get('rutEmpleado')
-        nombre   =   request.POST.get('nombreEmpleado')
-        apep   =   request.POST.get('apEmpleado')
-        apem   =   request.POST.get('amEmpleado')
+        rut  =   request.POST.get('rutEmpleado').upper()
+        nombre   =   request.POST.get('nombreEmpleado').upper()
+        apep   =   request.POST.get('apEmpleado').upper()
+        apem   =   request.POST.get('amEmpleado').upper()
         comunas   =   request.POST.get('genero')
         genero   =   request.POST.get('comunas')
         messages.success(request, "Empleado guardado correctamente.")
@@ -202,10 +202,10 @@ def addAsistente(request):
     #############################################################################
     if request.method == 'POST' and 'modificarEmpleado' in request.POST:
         IDEMPLEADO = request.POST.get('IDEMPLEADO')
-        nombreEmpleado = request.POST.get('nombreEmpleado1')
-        apEmpleado    = request.POST.get('apEmpleado1')
-        amEmpleado     = request.POST.get('amEmpleado1')
-        rutEmpleado      = request.POST.get('rutEmpleado1')
+        nombreEmpleado = request.POST.get('nombreEmpleado1').upper()
+        apEmpleado    = request.POST.get('apEmpleado1').upper()
+        amEmpleado     = request.POST.get('amEmpleado1').upper()
+        rutEmpleado      = request.POST.get('rutEmpleado1').upper()
         genero       = request.POST.get('genero1')
         comunas        = request.POST.get('comunasId1')
         cursor.callproc("SPD_MODIFICAREMPLEADO",(IDEMPLEADO,nombreEmpleado,apEmpleado,amEmpleado,rutEmpleado,genero,comunas))  
