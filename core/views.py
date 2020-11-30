@@ -22,6 +22,13 @@ def login(request):
 
         USER_CRED = request.POST.get('TXT_CRED')
         PASSWORD = request.POST.get('TXT_PASS')
+        if(USER_CRED == ''):
+            messages.success(request, "Ingrese usuario")
+            return render(request,'core/login.html')
+
+        if(PASSWORD == ''):
+            messages.success(request, "Ingrese clave")
+            return render(request,'core/login.html')
 
         dataSet = {'USER_CRED':USER_CRED,'PASSWORD':PASSWORD}
         url = 'http://127.0.0.1:8000/API/Login/'

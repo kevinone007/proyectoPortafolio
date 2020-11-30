@@ -140,7 +140,7 @@ function validador() {
     }
 
 }
-
+var canti = 0;
 const agregar = () => {
     var cod = document.getElementById("asistentes").value;
     var combo = document.getElementById("asistentes");
@@ -160,6 +160,17 @@ const agregar = () => {
                         <td>${x.nombre}</td>
                         <td><button onclick="eliminarFila('${x.cod}')" class="btn btnColor">Eliminar</button></td>
                     </tr>`;
+            i++;
+            canti++;
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Seleccione un empleado.',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
         }
     });
     $('#listAsistentes').append(fila);
@@ -168,6 +179,7 @@ const agregar = () => {
 
 const eliminarFila = (x) => {
     $(`#i${x}`).remove();
+    canti--;
 };
 
 
@@ -187,13 +199,12 @@ function getCookie(name) {
     return cookieValue;
 }
 const csrftoken = getCookie('csrftoken');
-
 $('#guardarCapa').click(function() {
     var fecha = $("#fechaCapacitacion").val();
     var idCliente = $("#idCliente").val();
     var x = new Date();
     diaActual = x.getDate();
-    diaBuscado = diaActual + 14;
+    diaBuscado = diaActual + 2;
     x.setDate(diaBuscado);
     x = x.toISOString().slice(0, 10);
     if (fecha == null || fecha.length == 0 || /^\s+$/.test(fecha) || fecha.length > 50) {
@@ -209,7 +220,7 @@ $('#guardarCapa').click(function() {
         Swal.fire({
             icon: 'warning',
             title: 'Oops...',
-            text: 'Fecha de capacitación debe ser en 15 día más al actual',
+            text: 'Fecha de capacitación debe ser con 2 días de anticipación.',
             showConfirmButton: false,
             timer: 3000
         });
@@ -233,58 +244,49 @@ $('#guardarCapa').click(function() {
         url: `http://127.0.0.1:8000/API/ACTIVIDADID/${idCliente}`,
         success: function(res) {
             id = res[0].ID_ASISTENTE;
-            if (guardar(id) == false) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Lista de usuarios no puede estar vacía.',
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Capacitación solicitada',
-                    text: `Su capacitación ha sido ingresada correctamente. FECHA: ${fecha}`,
-                    showConfirmButton: true,
-                    timer: 3000
-                }).then(
-                    function() { window.location.replace('/solicitarCapacitacion'); }
-                );
-            }
+            var idUSER = null;
+
+            $('#listAsistentes tr').each(function(i) {
+                if (i > 1) {
+                    idUSER = $(this).find('td').eq(0).html();
+                    alert(idUSER);
+                    if (idUSER == null || idUSER.length == 0 || /^\s+$/.test(idUSER) || idUSER.length > 50) {
+                        return false;
+                    } else {
+                        $.ajax({
+                            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+                            type: "POST",
+                            dataType: 'text',
+                            async: false,
+                            data: JSON.stringify({ fecha: fecha, idUSER: idUSER, idActividad: id }),
+                            url: `http://127.0.0.1:8000/API/Capacitacion/`,
+                            error: function(request, error) {
+                                alert(error);
+                            }
+                        });
+                    }
+                } else {
+                    return false;
+                }
+            });
+
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Capacitación solicitada',
+                text: `Su capacitación ha sido ingresada correctamente. FECHA: ${fecha}`,
+                showConfirmButton: true,
+                timer: 3000
+            }).then(
+                function() { window.location.replace('/solicitarCapacitacion'); }
+            );
+
         },
         error: function(request, error) {
             alert(error);
         }
     });
 });
-
-const guardar = (id) => {
-    $('#listAsistentes tr').each(function(i) {
-        if (i > 0) {
-            var idUSER = null;
-            idUSER = $(this).find('td').eq(0).html();
-            var fecha = $("#fechaCapacitacion").val();
-            alert(idUSER);
-            if (idUSER == null || idUSER.length == 0 || /^\s+$/.test(idUSER) || idUSER.length > 50) {
-                return false;
-            } else {
-                $.ajax({
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
-                    type: "POST",
-                    dataType: 'text',
-                    async: false,
-                    data: JSON.stringify({ fecha: fecha, idUSER: idUSER, idActividad: id }),
-                    url: `http://127.0.0.1:8000/API/Capacitacion/`,
-                    error: function(request, error) {
-                        alert(error);
-                    }
-                });
-            }
-
-        }
-    });
-};
 
 
 $(function() {

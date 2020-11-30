@@ -155,14 +155,62 @@
     });
 </script>
 {% endfor %} {% endif %}
+<!-- ----------------------------------------------------- -->
+<script>
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+    if (mm < 10) {
+        mm = '0' + mm
+    }
 
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById("fechaVisita").setAttribute("min", today);
+</script>
+<!-- ----------------------------------------------------- -->
+<script>
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById("fechaAsesoria").setAttribute("min", today);
+</script>
+<!-- ----------------------------------------------------- -->
+<script>
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById("fechaModificacion").setAttribute("min", today);
+</script>
+<!-- ----------------------------------------------------- -->
 <script>
     function validacionVisita() {
         /* ---------------------------------------------------------- */
         fechaVisita = document.getElementById("fechaVisita").value;
         var x = new Date();
         diaActual = x.getDate();
-        diaBuscado = diaActual + 1
+        diaBuscado = diaActual + 2
         x.setDate(diaBuscado)
         x = x.toISOString().slice(0, 10);
 
@@ -179,7 +227,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Fecha de visita debe ser en 1 día más al actual',
+                text: 'Fecha de visita debe ser con 2 días de anticipación.',
                 showConfirmButton: false,
                 timer: 3000
             });
@@ -236,7 +284,7 @@
         fechaAsesoria = document.getElementById("fechaAsesoria").value;
         var x = new Date();
         diaActual = x.getDate();
-        diaBuscado = diaActual + 1
+        diaBuscado = diaActual + 2
         x.setDate(diaBuscado)
         x = x.toISOString().slice(0, 10);
 
@@ -253,7 +301,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Fecha de asesoría debe ser en 1 día más al actual',
+                text: 'Fecha de asesoría debe ser con 2 días de anticipación.',
                 showConfirmButton: false,
                 timer: 3000
             });
@@ -296,7 +344,7 @@
         fechaModificacion = document.getElementById("fechaModificacion").value;
         var x = new Date();
         diaActual = x.getDate();
-        diaBuscado = diaActual + 1
+        diaBuscado = diaActual + 2
         x.setDate(diaBuscado)
         x = x.toISOString().slice(0, 10);
 
@@ -313,7 +361,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Fecha de Modificación debe ser en 1 día más al actual',
+                text: 'Fecha de Modificación debe ser con 2 días de anticipación.',
                 showConfirmButton: false,
                 timer: 3000
             });

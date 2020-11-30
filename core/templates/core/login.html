@@ -10,11 +10,11 @@
                 <div class="row">
                     <div class="col-md-6 mt-3">
                         <label>Usuario</label>
-                        <input type="text" class="form-control" name="TXT_CRED" placeholder="Usuario" required>
+                        <input type="text" class="form-control" name="TXT_CRED" id="user" placeholder="Usuario">
                     </div>
                     <div class="col-md-6 mt-3">
                         <label>Clave</label>
-                        <input type="password" class="form-control" name="TXT_PASS" placeholder="Clave" required>
+                        <input type="password" class="form-control" name="TXT_PASS" id="pass" placeholder="Clave">
                     </div>
                 </div>
                 <div class=" justify-content-center mt-3">
@@ -47,4 +47,5 @@
         timer: 3000
     });
 </script>
+
 {% endfor %} {% endif %} {% endblock contenido %}
