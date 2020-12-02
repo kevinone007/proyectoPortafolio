@@ -1,4 +1,49 @@
 {% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
+<h2><span class="badge navColor">Ingrese la fecha de la capacitaci&oacute;n</span></h2>
+<div>
+    <label>Fecha de Capacitaci&oacute;n</label>
+    <input type="date" name="fechaCapacitacion" id="fechaCapacitacion">
+    <label>Hora de Capacitaci&oacute;n</label>
+    <input type="time" name="horaCapacitacion" id="horaCapacitacion">
+</div>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">RUT ASISTENTE</th>
+            <th scope="col">ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <select class="form-control asistentes text text-dark" id="asistentes" name="asistentes">
+                    <option value="">Seleccione Asistente</option>
+                </select>
+            </td>
+            <td>
+                <button class="btn btnColor" onclick="validador()">Agregar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table class="table" id="listAsistentes">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col" style="display:none">ID ASISTENTE</th>
+            <th scope="col">DATOS ASISTENTE</th>
+            <th scope="col">ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-center mt-3">
+    <button class="btn btnColor btn-block" id="guardarCapa" type="submit">
+        Guardar Capacitación
+    </button>
+</div>
 <h1 class="text text-center text-dark">Capacitaciones</h1>
 {% if capacitacion|length == 0 %}
 <h1 class="alert alert-danger">Usted no ha registrado capacitaciones</h1>
@@ -81,58 +126,7 @@
 </table>
 
 
-<nav>
-    <ul class="pagination ">
-        <a id="numbers"></a>
-    </ul>
-</nav>
 {% endif %}
-
-
-
-<h2><span class="badge navColor">Ingrese la fecha de la capacitaci&oacute;n</span></h2>
-<div>
-    <label>Fecha de Capacitaci&oacute;n</label>
-    <input type="date" name="fechaCapacitacion" id="fechaCapacitacion">
-</div>
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">RUT ASISTENTE</th>
-            <th scope="col">ACCIONES</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                <select class="form-control asistentes text text-dark" id="asistentes" name="asistentes">
-                    <option value="">Seleccione Asistente</option>
-                </select>
-            </td>
-            <td>
-                <button class="btn btnColor" onclick="validador()">Agregar</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<table class="table" id="listAsistentes">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col" style="display:none">ID ASISTENTE</th>
-            <th scope="col">DATOS ASISTENTE</th>
-            <th scope="col">ACCIONES</th>
-        </tr>
-    </thead>
-    <tbody>
-
-    </tbody>
-</table>
-
-<div class="d-flex justify-content-center mt-3">
-    <button class="btn btnColor btn-block" id="guardarCapa" type="submit">
-        Guardar Capacitación
-    </button>
-</div>
 <script>
     var today = new Date();
     var dd = today.getDate();

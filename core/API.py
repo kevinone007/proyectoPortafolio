@@ -108,8 +108,10 @@ class InsertActividadCapacitacion(APIView):
         out_cur = django_cursor.connection.cursor()
         data = request.data 
         fecha = data['fecha'] 
+        horaFinal = data['horaFinal'] 
+        minutoFinal = data['minutoFinal'] 
         idCliente = data['idCliente'] 
-        cursor.callproc('SPD_INSERTACTIVIDADCAPACITACION',[str(fecha),idCliente])
+        cursor.callproc('SPD_INSERTACTIVIDADCAPACITACION',[str(fecha),horaFinal,minutoFinal,idCliente])
         return HttpResponse('application/javascript')
 
 class ACTIVIDADID(APIView):

@@ -233,6 +233,9 @@ const csrftoken = getCookie('csrftoken');
 $('#guardarCapa').click(function() {
     var fecha = $("#fechaCapacitacion").val();
     var idCliente = $("#idCliente").val();
+    horaVisita = $("#horaCapacitacion").val();
+    horaVisita1 = horaVisita.toString().substr(0, 2);
+    horaVisita1 = parseInt(horaVisita1);
     var x = new Date();
     diaActual = x.getDate();
     diaBuscado = diaActual + 2;
@@ -257,6 +260,26 @@ $('#guardarCapa').click(function() {
         });
         return false;
     }
+
+    if (horaVisita == null || horaVisita.length == 0 || /^\s+$/.test(horaVisita) || horaVisita.length > 50) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Hora de capacitación no puede estar vacío',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        return false;
+    } else if (horaVisita1 <= 07 || horaVisita1 >= 19) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Hora de capacitación debe ser entre las 8:00 y las 18:00',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        return false;
+    }
     if ($('#listAsistentes tr').length == 1) {
         Swal.fire({
             icon: 'warning',
@@ -268,11 +291,17 @@ $('#guardarCapa').click(function() {
         return false;
     }
 
+
+    var horaFinal = $("#horaCapacitacion").val();
+    var minutoFinal = $("#horaCapacitacion").val();
+    horaFinal = horaFinal.substr(0, 2);
+    minutoFinal = minutoFinal.substr(3, 2);
+
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
         type: "POST",
         dataType: 'json',
-        data: JSON.stringify({ 'fecha': fecha, 'idCliente': idCliente }),
+        data: JSON.stringify({ 'fecha': fecha, 'horaFinal': horaFinal, 'minutoFinal': minutoFinal, 'idCliente': idCliente }),
         url: `http://127.0.0.1:8000/API/InsertActividadCapacitacion/`,
         error: function(err) {
             console.log(err);
@@ -290,7 +319,7 @@ $('#guardarCapa').click(function() {
             Swal.fire({
                 icon: 'success',
                 title: 'Capacitacion solicitada',
-                text: `Su capacitacion ha sido ingresada correctamente. FECHA: ${fecha}`,
+                text: `Su capacitacion ha sido ingresada correctamente para el día: ${fecha} ${horaFinal}:${minutoFinal}`,
                 showConfirmButton: true,
                 timer: 10000
             }).then(
@@ -373,7 +402,6 @@ $(function() {
         rows.slice(start, end).show();
     }
 });
-
 
 
 
