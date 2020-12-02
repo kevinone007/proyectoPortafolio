@@ -1,6 +1,7 @@
 /*jshint esversion: 6 */
 $(document).ready(function() {
 
+    var idEmpresa = $('#idCliente').val();
     id = 0;
     GetRegiones(0);
     jQuery('#regiones').change(function() {
@@ -16,7 +17,7 @@ $(document).ready(function() {
     });
     GetRubros();
     GetServicios();
-    GetAsistentes();
+    GetAsistentes(idEmpresa);
     $('.asistentes').select2();
 });
 
@@ -65,6 +66,32 @@ const deleteRegionesById = (identity) => {
     $(`#regiones${identity} option`).remove();
 };
 
+
+const listAsistentesCapacitacion = (idCapa) => {
+    var fila = '';
+    $(`#h${idCapa} tbody`).empty();
+    $.ajax({
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        type: "GET",
+        url: `http://127.0.0.1:8000/API/LISTAASISTENTESCAPA/${idCapa}`,
+        success: function(res) {
+            $.each(JSON.parse(res), function(i, x) {
+                fila += (`<tr>
+                            <td>${x.RUT}</td>
+                            <td>${x.NOMBRE} ${x.AP} ${x.AM}</td>
+                            <td>${x.GEN}</td>
+                        </tr>`);
+            });
+            $(`#h${idCapa}`).append(fila);
+        },
+        error: function(request, error) {
+            alert(error);
+        }
+    });
+
+};
+
+
 const GetRubros = () => {
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
@@ -99,11 +126,11 @@ const GetServicios = () => {
     });
 };
 
-const GetAsistentes = () => {
+const GetAsistentes = (idEmpresa) => {
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         type: "GET",
-        url: 'http://127.0.0.1:8000/API/Asistentes/',
+        url: `http://127.0.0.1:8000/API/Asistentes/${idEmpresa}`,
         success: function(res) {
             $.each(JSON.parse(res), function(i, x) {
                 $('#asistentes').append(`<option value="${x.ID_ASISTENTE}">${x.RUT_TRABAJADOR} , ${x.NOMBRE} ${x.AP_PAT} ${x.AP_MAT}</option>`);
@@ -199,6 +226,10 @@ function getCookie(name) {
     return cookieValue;
 }
 const csrftoken = getCookie('csrftoken');
+
+
+
+
 $('#guardarCapa').click(function() {
     var fecha = $("#fechaCapacitacion").val();
     var idCliente = $("#idCliente").val();
@@ -211,7 +242,7 @@ $('#guardarCapa').click(function() {
         Swal.fire({
             icon: 'warning',
             title: 'Oops...',
-            text: 'Fecha de capacitación no puede estar vacío',
+            text: 'Fecha no puede estar vacía.',
             showConfirmButton: false,
             timer: 3000
         });
@@ -220,74 +251,81 @@ $('#guardarCapa').click(function() {
         Swal.fire({
             icon: 'warning',
             title: 'Oops...',
-            text: 'Fecha de capacitación debe ser con 2 días de anticipación.',
+            text: 'Fecha de visita debe ser con 2 días de anticipación.',
             showConfirmButton: false,
             timer: 3000
         });
         return false;
     }
+    if ($('#listAsistentes tr').length == 1) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Debes llenar la lista de asistentes para la capacitación.',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        return false;
+    }
+
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
         type: "POST",
-        dataType: 'text',
+        dataType: 'json',
         data: JSON.stringify({ 'fecha': fecha, 'idCliente': idCliente }),
         url: `http://127.0.0.1:8000/API/InsertActividadCapacitacion/`,
-        error: function(request, error) {
-            alert(error);
+        error: function(err) {
+            console.log(err);
         }
     });
 
     $.ajax({
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         type: "GET",
-        dataType: 'json',
         url: `http://127.0.0.1:8000/API/ACTIVIDADID/${idCliente}`,
+        dataType: 'json',
         success: function(res) {
             id = res[0].ID_ASISTENTE;
-            var idUSER = null;
+            guardar(id);
+            Swal.fire({
+                icon: 'success',
+                title: 'Capacitacion solicitada',
+                text: `Su capacitacion ha sido ingresada correctamente. FECHA: ${fecha}`,
+                showConfirmButton: true,
+                timer: 10000
+            }).then(
 
-            $('#listAsistentes tr').each(function(i) {
-                if (i > 1) {
-                    idUSER = $(this).find('td').eq(0).html();
-                    alert(idUSER);
-                    if (idUSER == null || idUSER.length == 0 || /^\s+$/.test(idUSER) || idUSER.length > 50) {
-                        return false;
-                    } else {
-                        $.ajax({
-                            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
-                            type: "POST",
-                            dataType: 'text',
-                            async: false,
-                            data: JSON.stringify({ fecha: fecha, idUSER: idUSER, idActividad: id }),
-                            url: `http://127.0.0.1:8000/API/Capacitacion/`,
-                            error: function(request, error) {
-                                alert(error);
-                            }
-                        });
-                    }
-                } else {
-                    return false;
+                function() { window.location.replace('/solicitarCapacitacion'); }
+
+            );
+        },
+        error: function(err) {
+            alert('error');
+        }
+    });
+    console.log(id);
+
+});
+
+const guardar = (id) => {
+    $('#listAsistentes tr').each(function(i) {
+        if (i > 0) {
+            var idUSER = $(this).find('td').eq(0).html();
+            var fecha = $("#fechaCapacitacion").val();
+            $.ajax({
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+                type: "POST",
+                dataType: 'json',
+                data: JSON.stringify({ fecha: fecha, idUSER: idUSER, idActividad: id }),
+                url: `http://127.0.0.1:8000/API/Capacitacion/`,
+                error: function(err) {
+                    console.log(err);
                 }
             });
 
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Capacitación solicitada',
-                text: `Su capacitación ha sido ingresada correctamente. FECHA: ${fecha}`,
-                showConfirmButton: true,
-                timer: 3000
-            }).then(
-                function() { window.location.replace('/solicitarCapacitacion'); }
-            );
-
-        },
-        error: function(request, error) {
-            alert(error);
         }
     });
-});
-
+};
 
 $(function() {
     var rowsPerPage = 5;

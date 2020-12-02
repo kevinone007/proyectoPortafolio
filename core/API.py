@@ -78,11 +78,11 @@ class Rubros(APIView):
 
         
 class Asistentes(APIView):
-    def get(self, request):
+    def get(self, request, idEmpresa):
         django_cursor = connection.cursor()
         cursor = django_cursor.connection.cursor()
         out_cur = django_cursor.connection.cursor()
-        cursor.callproc('SPD_ASISTENTES',[out_cur])
+        cursor.callproc('SPD_ASISTENTES',[idEmpresa,out_cur])
         lista = []
         for x in out_cur:
             lista.append({'ID_ASISTENTE':x[0], 'RUT_TRABAJADOR':x[1], 'NOMBRE':x[2], 'AP_PAT':x[3], 'AP_MAT':x[4], 'NUM_ACCIDENTE':x[5], 'NUM_ACC_POST_CAP':x[6], 'FEC_CAPACITACION':str(x[7]), 'ID_CLIENTE':x[8], 'ID_GENERO':x[9], 'ID_COMUNA':x[10]})
@@ -145,5 +145,17 @@ class RUTEMPRESA(APIView):
         lista = []
         for x in out_cur:
             lista.append({'RESULTADO':x[0]})
+        res = json.dumps(lista)
+        return HttpResponse(res, 'application/javascript')
+
+class LISTAASISTENTESCAPA(APIView):
+    def get(self, request, IDCAPA):
+        django_cursor = connection.cursor()
+        cursor = django_cursor.connection.cursor()
+        out_cur = django_cursor.connection.cursor()
+        cursor.callproc('SPD_LISTAASISTENTESCAPA',[IDCAPA,out_cur])
+        lista = []
+        for x in out_cur:
+            lista.append({'RUT':x[0], 'NOMBRE': x[1], 'AP':x[2], 'AM':x[3], 'GEN':x[4]})
         res = json.dumps(lista)
         return HttpResponse(res, 'application/javascript')

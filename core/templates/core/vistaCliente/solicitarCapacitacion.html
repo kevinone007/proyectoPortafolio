@@ -1,6 +1,96 @@
 {% extends "core/vistaCliente/baseCliente.html" %} {% load static %} {% block contenidoCliente %}
+<h1 class="text text-center text-dark">Capacitaciones</h1>
+{% if capacitacion|length == 0 %}
+<h1 class="alert alert-danger">Usted no ha registrado capacitaciones</h1>
+{% else %}
+<table class="table" id="table-capacitaciones">
+    <thead class="thead">
+        <tr>
+            <th scope="col">Actividad</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Hora</th>
+            <th scope="col">Profesional</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for x in capacitacion %}
+        <tr>
+            <td hidden>{{x.IDCAPA}}</td>
+            <td>{{x.NOMBRE}}</td>
+            <td>{{x.FECHALIMPIA}}</td>
+            <td>{{x.HORA}}</td>
+            <td>{{x.PROFESIONAL}}</td>
+            <td>{{x.DESCRIPCION}}</td>
+            <td>
+                <a class="btn btnColor btn-block" id="btnCapa" data-toggle="modal" onclick="listAsistentesCapacitacion(`{{x.IDCAPA}}`);" data-target="#verCapa{{x.IDCAPA}}" name="btnCapa">Listado de asistentes</a>
+
+                <div class="modal fade" id="verCapa{{x.IDCAPA}}" data-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl ">
+                        <div class="modal-content p-3">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Datos de la capacitación</h5>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-2">
+                                    <label class="font-weight-bold">Fecha:</label>
+                                    <label>{{ x.FECHALIMPIA }}</label>
+                                </div>
+                                <div class="form-group col-2">
+                                    <label class="font-weight-bold">Hora:</label>
+                                    <label>{{ x.HORA }}</label>
+                                </div>
+                                <div class="form-group col-4">
+                                    <label class="font-weight-bold">Profesional:</label>
+                                    <label>{{ x.PROFESIONAL }}</label>
+                                </div>
+                                <div class="form-group col-4">
+                                    <label class="font-weight-bold">Estado:</label>
+                                    <label>{{ x.DESCRIPCION }}</label>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Asistentes a capacitación</h5>
+                            </div>
+                            <div class="modal-content">
+                                <table class="table" id="h{{x.IDCAPA}}">
+                                    <thead class="thead">
+                                        <tr>
+                                            <th scope="col">Rut</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Género</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<nav>
+    <ul class="pagination ">
+        <a id="numbers"></a>
+    </ul>
+</nav>
+{% endif %}
+
+
+
 <h2><span class="badge navColor">Ingrese la fecha de la capacitaci&oacute;n</span></h2>
-<input hidden value="{{data.id_cliente}}" id="idCliente"></input>
 <div>
     <label>Fecha de Capacitaci&oacute;n</label>
     <input type="date" name="fechaCapacitacion" id="fechaCapacitacion">
@@ -58,4 +148,7 @@
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById("fechaCapacitacion").setAttribute("min", today);
 </script>
+
+
+
 {% endblock contenidoCliente %}

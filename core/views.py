@@ -100,7 +100,7 @@ def inicioCliente(request):
     out_cur = django_cursor.connection.cursor()
     cursor.callproc("SPD_ACTIVIDADES",[IDCLIENTE, out_cur])
     actividades = []
-    fechaLimpia = []
+
     for x in out_cur:
             fecha = x[1]
             fecha =  fecha.split(" ")
@@ -124,6 +124,8 @@ def inicioCliente(request):
             fecha = dia+'-'+mes+'-'+anio
             hora = hora+':'+minuto
             actividades.append({'NOMBRE':x[0], 'PROFESIONAL':x[2], 'FECHALIMPIA':fecha, 'HORA':hora,'DESCRIPCION':x[3]})
+
+   
     data = {'data': lista[0], 'actividad': actividades} #cuando viene con [0] es un array y cuando viene solo es un objeto, el cual es iterable por el FOR 
    
    ####################SPD_INGRESARSOLICITUD###########################
@@ -180,8 +182,37 @@ def modificarDatos(request):
 
 def solicitarCapacitacion(request):
     lista = retornaDataUsuarioCliente(request.session['S'])
-    data = lista[0]['id_cliente'] 
-    ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
+    data = lista[0]['id_cliente']
+    IDCLIENTE = lista[0]['id_cliente']
+ 
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SPD_CAPACITACIONES",[IDCLIENTE, out_cur])
+    capacitaciones = []
+
+    for j in out_cur:
+            fecha = j[1]
+            fecha =  fecha.split(" ")
+            hora = fecha[1]
+            fecha = fecha[0]  
+            hora =  hora.split(":")
+            minuto = hora[1]
+            hora = hora[0]
+            if len(hora)<2:
+                hora = '0'+hora
+            else:
+                hora = hora
+            if len(minuto)<2:
+                minuto = '0'+minuto
+            else:
+                minuto = minuto
+            fecha = fecha.split("-")
+            dia = fecha[2]
+            mes = fecha[1]
+            anio = fecha[0]
+            fecha = dia+'-'+mes+'-'+anio
+            hora = hora+':'+minuto
+            capacitaciones.append({'NOMBRE':j[0], 'PROFESIONAL':j[2], 'FECHALIMPIA':fecha, 'HORA':hora,'DESCRIPCION':j[3], 'IDCAPA': j[4]})
+    ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data), 'capacitacion':capacitaciones}
     return render(request,'core/vistaCliente/solicitarCapacitacion.html',ClienteEmpresa)
 
 def addAsistente(request):
@@ -218,5 +249,4 @@ def addAsistente(request):
         cursor.callproc("SPD_MODIFICAREMPLEADO",(IDEMPLEADO,nombreEmpleado,apEmpleado,amEmpleado,rutEmpleado,genero,comunas))  
         messages.success(request, "Empleado modificado correctamente.")
         return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)
-
     return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)
