@@ -49,16 +49,21 @@
             <th scope="col">Hora</th>
             <th scope="col">Profesional</th>
             <th scope="col">Estado</th>
+            <th scope="col">Acción</th>
         </tr>
     </thead>
     <tbody>
         {% for x in actividad %}
         <tr>
+            <td hidden>{{x.IDACTI}}</td>
             <td>{{x.NOMBRE}}</td>
             <td>{{x.FECHALIMPIA}}</td>
             <td>{{x.HORA}}</td>
             <td>{{x.PROFESIONAL}}</td>
             <td>{{x.DESCRIPCION}}</td>
+            <td>
+                <a class="btn btnColor btn-block" id="btnEli{{x.IDACTI}}" onclick="EliminarActividad(`{{x.IDACTI}}`)" name="btnEli">Cancelar Actividad</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

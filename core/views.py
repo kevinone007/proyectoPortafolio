@@ -102,7 +102,7 @@ def inicioCliente(request):
     actividades = []
 
     for x in out_cur:
-            fecha = x[1]
+            fecha = x[2]
             fecha =  fecha.split(" ")
             hora = fecha[1]
             fecha = fecha[0]  
@@ -123,7 +123,7 @@ def inicioCliente(request):
             anio = fecha[0]
             fecha = dia+'-'+mes+'-'+anio
             hora = hora+':'+minuto
-            actividades.append({'NOMBRE':x[0], 'PROFESIONAL':x[2], 'FECHALIMPIA':fecha, 'HORA':hora,'DESCRIPCION':x[3]})
+            actividades.append({'IDACTI':x[0],'NOMBRE':x[1], 'PROFESIONAL':x[3], 'FECHALIMPIA':fecha, 'HORA':hora,'DESCRIPCION':x[4]})
 
    
     data = {'data': lista[0], 'actividad': actividades} #cuando viene con [0] es un array y cuando viene solo es un objeto, el cual es iterable por el FOR 

@@ -1,6 +1,6 @@
 from django.urls import path , include
 from .views import home, login, registro, inicioCliente, modificarDatos, mataSesion,solicitarCapacitacion, addAsistente
-from .API import Login, Comunas, Regiones, Rubros, Servicios, Asistentes, Capacitacion, InsertActividadCapacitacion, ACTIVIDADID, RUTASISTENTE, RUTEMPRESA, LISTAASISTENTESCAPA
+from .API import Login, Comunas, Regiones, Rubros, Servicios, Asistentes, Capacitacion, InsertActividadCapacitacion, ACTIVIDADID, RUTASISTENTE, RUTEMPRESA, LISTAASISTENTESCAPA, ELIMINACAPA
 
 urlpatterns = [
     path('', home, name='home'),
@@ -22,5 +22,7 @@ urlpatterns = [
     path('inicioCliente', inicioCliente, name='inicioCliente'),
     path('modificarDatos', modificarDatos, name='modificarDatos'),
     path('addAsistente', addAsistente, name='addAsistente'),
-    path('mataSesion', mataSesion, name='mataSesion')
+    path('mataSesion', mataSesion, name='mataSesion'),
+    path('API/ELIMINACAPA/<idAct>', ELIMINACAPA.as_view()),
+
 ]

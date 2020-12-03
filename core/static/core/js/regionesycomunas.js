@@ -1,6 +1,18 @@
 /*jshint esversion: 6 */
 $(document).ready(function() {
-
+    $('#table-actividades tr').each(function(i) {
+        var valor = $(this).find('td').eq(5).html();
+        var boton = $(this).find('td').eq(0).html();
+        if(valor == "Terminada"){
+            $('#btnEli'+boton).addClass('disabled');
+        }
+        if(valor == "Cancelada"){
+            $('#btnEli'+boton).addClass('disabled');
+        } 
+        if(valor == "En Curso"){
+            $('#btnEli'+boton).addClass('disabled');
+        }
+    });
     var idEmpresa = $('#idCliente').val();
     id = 0;
     GetRegiones(0);
@@ -270,7 +282,7 @@ $('#guardarCapa').click(function() {
             timer: 3000
         });
         return false;
-    } else if (horaVisita1 <= 07 || horaVisita1 >= 19) {
+    } else if (horaVisita1 <= 07 || horaVisita1 >= 18) {
         Swal.fire({
             icon: 'warning',
             title: 'Oops...',
@@ -301,6 +313,7 @@ $('#guardarCapa').click(function() {
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
         type: "POST",
         dataType: 'json',
+        async: false,
         data: JSON.stringify({ 'fecha': fecha, 'horaFinal': horaFinal, 'minutoFinal': minutoFinal, 'idCliente': idCliente }),
         url: `http://127.0.0.1:8000/API/InsertActividadCapacitacion/`,
         error: function(err) {
@@ -313,6 +326,7 @@ $('#guardarCapa').click(function() {
         type: "GET",
         url: `http://127.0.0.1:8000/API/ACTIVIDADID/${idCliente}`,
         dataType: 'json',
+        async: false,
         success: function(res) {
             id = res[0].ID_ASISTENTE;
             guardar(id);
@@ -355,6 +369,36 @@ const guardar = (id) => {
         }
     });
 };
+
+const EliminarActividad = (idAct) => {
+    Swal.fire({
+        title: 'Estás segura/o?',
+        text: "Esta acción no se puede revertir.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, cancelar.',
+        cancelButtonText: 'No, volver atrás',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                type: "PUT",
+                url: `http://127.0.0.1:8000/API/ELIMINACAPA/${idAct}`,
+                dataType: 'json'
+            }).then(
+                Swal.fire(
+                    'Cancelada!',
+                    'La capacitación ha sido cancelada correctamente.',
+                    'success'
+                ));
+        }
+    });
+
+
+
+};
+
+
 
 $(function() {
     var rowsPerPage = 5;
