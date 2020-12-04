@@ -62,7 +62,8 @@
             <td>{{x.PROFESIONAL}}</td>
             <td>{{x.DESCRIPCION}}</td>
             <td>
-                <a class="btn btnColor btn-block" id="btnEli{{x.IDACTI}}" onclick="EliminarActividad(`{{x.IDACTI}}`)" name="btnEli">Cancelar Actividad</a>
+                <a class="btn btnColor" id="btnCan{{x.IDACTI}}" onclick="CancelarActividad(`{{x.IDACTI}}`)" name="btnCan">Cancelar Actividad</a>
+                <a class="btn btnColor" id="btnEli{{x.IDACTI}}" onclick="EliminarActividad(`{{x.IDACTI}}`)" name="btnEli">Eliminar Actividad</a>
             </td>
         </tr>
         {% endfor %}

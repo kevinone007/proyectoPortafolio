@@ -5,6 +5,7 @@ import json
 from django.db import connection
 from django.core.cache import cache
 from django.contrib import messages 
+from django.http import HttpResponse
 
 
 django_cursor = connection.cursor()
@@ -248,5 +249,4 @@ def addAsistente(request):
         comunas        = request.POST.get('comunasId1')
         cursor.callproc("SPD_MODIFICAREMPLEADO",(IDEMPLEADO,nombreEmpleado,apEmpleado,amEmpleado,rutEmpleado,genero,comunas))  
         messages.success(request, "Empleado modificado correctamente.")
-        return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)
     return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)

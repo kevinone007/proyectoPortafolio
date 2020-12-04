@@ -4,12 +4,23 @@ $(document).ready(function() {
         var valor = $(this).find('td').eq(5).html();
         var boton = $(this).find('td').eq(0).html();
         if(valor == "Terminada"){
+            $('#btnCan'+boton).addClass('disabled');
             $('#btnEli'+boton).addClass('disabled');
         }
         if(valor == "Cancelada"){
-            $('#btnEli'+boton).addClass('disabled');
+            $('#btnCan'+boton).addClass('disabled');
         } 
         if(valor == "En Curso"){
+            $('#btnCan'+boton).addClass('disabled');
+            $('#btnEli'+boton).addClass('disabled');
+        }
+        if(valor == "Programada"){
+            $('#btnEli'+boton).addClass('disabled');
+        }
+        if(valor == "Reprogramada"){
+            $('#btnEli'+boton).addClass('disabled');
+        }
+        if(valor == "Solicitada"){
             $('#btnEli'+boton).addClass('disabled');
         }
     });
@@ -31,6 +42,12 @@ $(document).ready(function() {
     GetServicios();
     GetAsistentes(idEmpresa);
     $('.asistentes').select2();
+    var myStatus = response.status;
+    if(myStatus == "OK"){
+        alert(myStatus)
+    }
+
+
 });
 
 const GetRegiones = (id) => {
@@ -370,6 +387,34 @@ const guardar = (id) => {
     });
 };
 
+const CancelarActividad = (idAct) => {
+    Swal.fire({
+        title: 'Estás segura/o?',
+        text: "Esta acción no se puede revertir.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, cancelar.',
+        cancelButtonText: 'No, volver atrás',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                type: "PUT",
+                url: `http://127.0.0.1:8000/API/CANCELACAPA/${idAct}`,
+                dataType: 'json'
+            }).then(
+                Swal.fire(
+                    'Cancelada!',
+                    'La capacitación ha sido cancelada correctamente.',
+                    'success'
+                ));
+        }
+    });
+
+
+
+};
+
 const EliminarActividad = (idAct) => {
     Swal.fire({
         title: 'Estás segura/o?',
@@ -387,8 +432,8 @@ const EliminarActividad = (idAct) => {
                 dataType: 'json'
             }).then(
                 Swal.fire(
-                    'Cancelada!',
-                    'La capacitación ha sido cancelada correctamente.',
+                    'Eliminada!',
+                    'La capacitación ha sido eliminada correctamente.',
                     'success'
                 ));
         }
@@ -397,9 +442,6 @@ const EliminarActividad = (idAct) => {
 
 
 };
-
-
-
 $(function() {
     var rowsPerPage = 5;
     var rows = $('#table-actividades tbody tr');

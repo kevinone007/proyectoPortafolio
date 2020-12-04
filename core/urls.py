@@ -1,6 +1,6 @@
 from django.urls import path , include
 from .views import home, login, registro, inicioCliente, modificarDatos, mataSesion,solicitarCapacitacion, addAsistente
-from .API import Login, Comunas, Regiones, Rubros, Servicios, Asistentes, Capacitacion, InsertActividadCapacitacion, ACTIVIDADID, RUTASISTENTE, RUTEMPRESA, LISTAASISTENTESCAPA, ELIMINACAPA
+from .API import Login, Comunas, Regiones, Rubros, Servicios, Asistentes, Capacitacion, InsertActividadCapacitacion, ACTIVIDADID, RUTASISTENTE, RUTEMPRESA, LISTAASISTENTESCAPA, CANCELACAPA,ELIMINACAPA
 
 urlpatterns = [
     path('', home, name='home'),
@@ -23,6 +23,8 @@ urlpatterns = [
     path('modificarDatos', modificarDatos, name='modificarDatos'),
     path('addAsistente', addAsistente, name='addAsistente'),
     path('mataSesion', mataSesion, name='mataSesion'),
+    path('API/CANCELACAPA/<idAct>', CANCELACAPA.as_view()),
     path('API/ELIMINACAPA/<idAct>', ELIMINACAPA.as_view()),
+
 
 ]

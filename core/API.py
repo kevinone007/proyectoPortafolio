@@ -163,10 +163,18 @@ class LISTAASISTENTESCAPA(APIView):
         return HttpResponse(res, 'application/javascript')
 
 
-class ELIMINACAPA(APIView):
+class CANCELACAPA(APIView):
     def put(self, request, idAct):
         django_cursor = connection.cursor()
         cursor = django_cursor.connection.cursor()
         out_cur = django_cursor.connection.cursor()
         cursor.callproc('SPD_CANCEL_ACT',[idAct])
+        return HttpResponse('application/javascript')
+
+class ELIMINACAPA(APIView):
+    def put(self, request, idAct):
+        django_cursor = connection.cursor()
+        cursor = django_cursor.connection.cursor()
+        out_cur = django_cursor.connection.cursor()
+        cursor.callproc('SPD_ELI_ACT',[idAct])
         return HttpResponse('application/javascript')
