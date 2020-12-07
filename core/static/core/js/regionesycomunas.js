@@ -42,11 +42,6 @@ $(document).ready(function() {
     GetServicios();
     GetAsistentes(idEmpresa);
     $('.asistentes').select2();
-    var myStatus = response.status;
-    if(myStatus == "OK"){
-        alert(myStatus)
-    }
-
 
 });
 
@@ -421,7 +416,7 @@ const EliminarActividad = (idAct) => {
         text: "Esta acción no se puede revertir.",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Si, cancelar.',
+        confirmButtonText: 'Si, eliminar.',
         cancelButtonText: 'No, volver atrás',
     }).then((result) => {
         if (result.isConfirmed) {
