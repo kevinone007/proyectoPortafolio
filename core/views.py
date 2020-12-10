@@ -74,7 +74,7 @@ def retornaDataUsuarioCliente(USER):
     cursor.callproc("SPD_GETDATAUSUARIO",[USER, out_cur])
     lista = []
     for x in out_cur:
-            lista.append({'id_credencial':x[0], 'user_cred':x[1], 'password':x[2] ,'id_rol':x[3], 'id_est_creden':x[4], 'id_profesional':x[5], 'id_cliente':x[6]})
+            lista.append({'id_credencial':x[0], 'user_cred':x[1], 'password':x[2] ,'id_rol':x[3], 'id_est_creden':x[4], 'id_profesional':x[5], 'id_cliente':x[6], 'userName':x[7]})
     return lista
 
 def dataClienteEmpresa(IDCLIENTE):
