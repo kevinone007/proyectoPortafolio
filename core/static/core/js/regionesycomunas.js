@@ -23,6 +23,9 @@ $(document).ready(function() {
         if(valor == "Solicitada"){
             $('#btnEli'+boton).addClass('disabled');
         }
+        if(valor == "Asignada"){
+            $('#btnEli'+boton).addClass('disabled');
+        }
     });
     var idEmpresa = $('#idCliente').val();
     id = 0;

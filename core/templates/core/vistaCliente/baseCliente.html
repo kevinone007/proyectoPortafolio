@@ -299,7 +299,7 @@
             });
             return false;
         } 
-        }
+        
 
         /* ---------------------------------------------------------- */
         horaAsesoria = document.getElementById("horaAsesoria").value;
@@ -314,16 +314,7 @@
                 timer: 3000
             });
             return false;
-        } else if (horaAsesoria1 <= 07 || horaAsesoria1 >= 18) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops...',
-                text: 'Hora de asesoría debe ser entre las 8:00 y las 18:00',
-                showConfirmButton: false,
-                timer: 3000
-            });
-            return false;
-        }
+        } 
     }
 
 
