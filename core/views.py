@@ -99,37 +99,9 @@ def inicioCliente(request):
     lista = retornaDataUsuarioCliente(request.session['S'])
     IDCLIENTE = lista[0]['id_cliente']
     out_cur = django_cursor.connection.cursor()
-    cursor.callproc("SPD_ACTIVIDADES",[IDCLIENTE, out_cur])
-    actividades = []
 
-    for x in out_cur:
-            fecha = x[2]
-            fecha =  fecha.split(" ")
-            hora = fecha[1]
-            fecha = fecha[0]  
-            hora =  hora.split(":")
-            minuto = hora[1]
-            hora = hora[0]
-            if len(hora)<2:
-                hora = '0'+hora
-            else:
-                hora = hora
-            if len(minuto)<2:
-                minuto = '0'+minuto
-            else:
-                minuto = minuto
-            fecha = fecha.split("-")
-            dia = fecha[2]
-            mes = fecha[1]
-            anio = fecha[0]
-            fecha = dia+'-'+mes+'-'+anio
-            hora = hora+':'+minuto
-            actividades.append({'IDACTI':x[0],'NOMBRE':x[1], 'PROFESIONAL':x[3], 'FECHALIMPIA':fecha, 'HORA':hora,'DESCRIPCION':x[4]})
 
-   
-    data = {'data': lista[0], 'actividad': actividades} #cuando viene con [0] es un array y cuando viene solo es un objeto, el cual es iterable por el FOR 
-   
-   ####################SPD_INGRESARSOLICITUD###########################
+    ####################SPD_INGRESARSOLICITUD###########################
     if request.method == 'POST' and 'btnRealizarSolicitud' in request.POST:
         fechaVisita  =   request.POST.get('fechaVisita')
         horaVisita   =   request.POST.get('horaVisita')
@@ -162,13 +134,43 @@ def inicioCliente(request):
         cursor.callproc("SPD_INGRESARMODIFICACION",(fechaModificacion, horaModificacion, minutoVisita, IDCLIENTE))
         messages.success(request, "Modificación solicitada correctamente.")
 
+
+    ####################DATOS PARA TABLA###########################    
+    cursor.callproc("SPD_ACTIVIDADES",[IDCLIENTE, out_cur])
+    actividades = []
+
+    for x in out_cur:
+            fecha = x[2]
+            fecha =  fecha.split(" ")
+            hora = fecha[1]
+            fecha = fecha[0]  
+            hora =  hora.split(":")
+            minuto = hora[1]
+            hora = hora[0]
+            if len(hora)<2:
+                hora = '0'+hora
+            else:
+                hora = hora
+            if len(minuto)<2:
+                minuto = '0'+minuto
+            else:
+                minuto = minuto
+            fecha = fecha.split("-")
+            dia = fecha[2]
+            mes = fecha[1]
+            anio = fecha[0]
+            fecha = dia+'-'+mes+'-'+anio
+            hora = hora+':'+minuto
+            actividades.append({'IDACTI':x[0],'NOMBRE':x[1], 'PROFESIONAL':x[3], 'FECHALIMPIA':fecha, 'HORA':hora,'DESCRIPCION':x[4]})
+
+    data = {'data': lista[0], 'actividad': actividades} #cuando viene con [0] es un array y cuando viene solo es un objeto, el cual es iterable por el FOR 
+
     return render(request,'core/vistaCliente/inicioCliente.html', data )
 
 def modificarDatos(request):
     lista = retornaDataUsuarioCliente(request.session['S']) 
     data = lista[0]['id_cliente'] 
-    ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
-
+    
     if request.method == 'POST' :
         nombreEmpresa = request.POST.get('nombreEmpresa').upper()
         rutEmpresa    = request.POST.get('rutEmpresa').upper()
@@ -178,6 +180,7 @@ def modificarDatos(request):
         correo        = request.POST.get('correo').upper()
         cursor.callproc("SPD_MODIFICARCLIENTE",(data, nombreEmpresa, rutEmpresa, direccion, telefono, comunas,correo))
         messages.success(request, "Datos modificados correctamente.")
+    ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(data)}
     return render(request, 'core/vistaCliente/modificarDatos.html', ClienteEmpresa)
 
 
@@ -220,11 +223,6 @@ def addAsistente(request):
     lista = retornaDataUsuarioCliente(request.session['S'])
     IDCLIENTE = lista[0]['id_cliente'] 
     out_cur = django_cursor.connection.cursor()
-    cursor.callproc("SPD_EMPLEADOS",[IDCLIENTE, out_cur])
-    empleados = []
-    for x in out_cur:
-            empleados.append({'RUT':x[0], 'NOMBRE':x[1], 'AP':x[2], 'AM':x[3], 'COMUNA':x[4], 'GENERO':x[5], 'ID':x[6]})
-    ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(IDCLIENTE), 'empleados': empleados}
 
     #############################################################################
     if request.method == 'POST' and 'btnInsertar' in request.POST:
@@ -249,4 +247,11 @@ def addAsistente(request):
         comunas        = request.POST.get('comunasId1')
         cursor.callproc("SPD_MODIFICAREMPLEADO",(IDEMPLEADO,nombreEmpleado,apEmpleado,amEmpleado,rutEmpleado,genero,comunas))  
         messages.success(request, "Empleado modificado correctamente.")
+
+    cursor.callproc("SPD_EMPLEADOS",[IDCLIENTE, out_cur])
+    empleados = []
+    for x in out_cur:
+            empleados.append({'RUT':x[0], 'NOMBRE':x[1], 'AP':x[2], 'AM':x[3], 'COMUNA':x[4], 'GENERO':x[5], 'ID':x[6]})
+    ClienteEmpresa = {'data': lista[0], 'ClienteEmpresa': dataClienteEmpresa(IDCLIENTE), 'empleados': empleados}
+    
     return render (request, 'core/vistaCliente/addAsistente.html',ClienteEmpresa)
