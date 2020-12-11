@@ -17,7 +17,8 @@ def home(request):
 def login(request):
 
     if "S" in request.session:
-        return redirect(home)
+        messages.success(request, "Última sesión recuperada.")
+        return redirect(inicioCliente)
     
     if request.method == 'POST' :
 
