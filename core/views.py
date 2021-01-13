@@ -96,6 +96,7 @@ def inicioCliente(request):
     if   'S' in request.session:
         print('Usuario loggeado')
     else:
+        messages.success(request, "Debes iniciar sesión.")
         return redirect(login)
     lista = retornaDataUsuarioCliente(request.session['S'])
     IDCLIENTE = lista[0]['id_cliente']
